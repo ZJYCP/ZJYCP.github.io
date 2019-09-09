@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Web,http,计算机网络,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="简易版 浏览器根据请求的URL交给DNS域名解析，找到真实IP，向服务器发起请求； 服务器交给后台处理完成后返回数据，浏览器接收文件（HTML、JS、CSS、图象等）； 浏览器对加载到的资源（HTML、JS、CSS等）进行语法解析，建立相应的内部数据结构（如HTML的DOM）； 载入解析到的资源文件，渲染页面，完成。  详细版 在浏览器地址栏输入url 浏览器查看缓存,如果请求资源在缓存中并且新鲜">
+<meta name="keywords" content="Web,http,计算机网络">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从浏览器地址栏输入url到显示页面的步骤">
+<meta property="og:url" content="https://blog.emx6.com/2019/07/01/从浏览器地址栏输入url到显示页面的步骤/index.html">
+<meta property="og:site_name" content="上帝不会掷骰子">
+<meta property="og:description" content="简易版 浏览器根据请求的URL交给DNS域名解析，找到真实IP，向服务器发起请求； 服务器交给后台处理完成后返回数据，浏览器接收文件（HTML、JS、CSS、图象等）； 浏览器对加载到的资源（HTML、JS、CSS等）进行语法解析，建立相应的内部数据结构（如HTML的DOM）； 载入解析到的资源文件，渲染页面，完成。  详细版 在浏览器地址栏输入url 浏览器查看缓存,如果请求资源在缓存中并且新鲜">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-07T14:59:24.541Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从浏览器地址栏输入url到显示页面的步骤">
+<meta name="twitter:description" content="简易版 浏览器根据请求的URL交给DNS域名解析，找到真实IP，向服务器发起请求； 服务器交给后台处理完成后返回数据，浏览器接收文件（HTML、JS、CSS、图象等）； 浏览器对加载到的资源（HTML、JS、CSS等）进行语法解析，建立相应的内部数据结构（如HTML的DOM）； 载入解析到的资源文件，渲染页面，完成。  详细版 在浏览器地址栏输入url 浏览器查看缓存,如果请求资源在缓存中并且新鲜">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.emx6.com/2019/07/01/从浏览器地址栏输入url到显示页面的步骤/">
+
+
+
+
+
+  <title>从浏览器地址栏输入url到显示页面的步骤 | 上帝不会掷骰子</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">上帝不会掷骰子</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            日程表
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog.emx6.com/2019/07/01/从浏览器地址栏输入url到显示页面的步骤/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Glyn Yu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="上帝不会掷骰子">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从浏览器地址栏输入url到显示页面的步骤</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-01T22:45:04+08:00">
+                2019-07-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2019/07/01/从浏览器地址栏输入url到显示页面的步骤/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2019/07/01/从浏览器地址栏输入url到显示页面的步骤/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </span></div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="简易版"><a href="#简易版" class="headerlink" title="简易版"></a>简易版</h3><ol>
+<li>浏览器根据请求的URL交给DNS域名解析，找到真实IP，向服务器发起请求；</li>
+<li>服务器交给后台处理完成后返回数据，浏览器接收文件（HTML、JS、CSS、图象等）；</li>
+<li>浏览器对加载到的资源（HTML、JS、CSS等）进行语法解析，建立相应的内部数据结构（如HTML的DOM）；</li>
+<li>载入解析到的资源文件，渲染页面，完成。</li>
+</ol>
+<h3 id="详细版"><a href="#详细版" class="headerlink" title="详细版"></a>详细版</h3><ol>
+<li>在浏览器地址栏输入url</li>
+<li>浏览器查看<strong>缓存</strong>,如果请求资源在缓存中并且新鲜,跳转到转码步骤<ol>
+<li>如果资源未缓存,发起新请求</li>
+<li>如果已缓存,检验是否足够新鲜,足够新鲜直接提供给客户端,否则与服务器进行验证</li>
+<li>检验新鲜通常有两个http头进行空值Expires和cache-control:</li>
+</ol>
+<ul>
+<li>HTTP1.0提供Expires,值为一个绝对时间表示缓存新鲜日期</li>
+<li>HTTP1.1增加了Cache-Control:max-age=,值为秒为单位的最大新鲜时间</li>
+</ul>
+</li>
+<li>浏览器<strong>解析URL</strong>获取协议,主机,端口,path</li>
+<li>浏览器<strong>组装一个HTTP(GET)请求报文</strong></li>
+<li>浏览器<strong>获取主机IP地址</strong>,过程如下:<ol>
+<li>浏览器缓存</li>
+<li>本机缓存</li>
+<li>hosts文件</li>
+<li>路由器缓存</li>
+<li>ISP DNS缓存</li>
+<li>DNS递归查询</li>
+</ol>
+</li>
+<li>打开一个socket与目标IP地址,端口<strong>建立TCP链接</strong>,上次握手如下:<ol>
+<li>客户端发送一个TCP的SYN=1,Seq=X的包到服务器端口</li>
+<li>服务器发回SYN=1,ACK=X+1,Seq=Y的响应包</li>
+<li>客户端发送ACK=Y+1,Seq=Z</li>
+</ol>
+</li>
+<li>TCP连接建立后<strong>发送HTTP请求</strong></li>
+<li>服务器接收请求并解析,将请求转发到服务程序,如虚拟主机使用HTTP Host头部判断请求的服务程序</li>
+<li>服务器<strong>检查HTTP头是否包含缓存验证信息</strong> 如果验证缓存新鲜,返回304等对应状态码</li>
+<li>处理程序读取完整请求并准备HTTP相应,可能需要查询数据库等操作</li>
+<li>服务器将响应报文通过TCP连接发送回浏览器</li>
+<li>浏览器接收HTTP响应，然后根据情况关闭TCP连接或者保留重用,关闭TCP连接的四次握手如下:<ol>
+<li>主动方发送Fin=1,ACK=Z,Seq=X报文</li>
+<li>被动方发送ACK=X+1,Seq=Z报文</li>
+<li>被动方发送Fin=1， ACK=X， Seq=Y报文</li>
+<li>主动方发送ACK=Y， Seq=X报文</li>
+</ol>
+</li>
+<li>浏览器检查响应状态吗：是否为1XX，3XX， 4XX， 5XX，这些情况处理与2XX不同</li>
+<li>如果资源可缓存，进行缓存</li>
+<li>对响应进行解码（例如gzip压缩）</li>
+<li>根据资源类型决定如何处理（假设资源为HTML文档）</li>
+<li><strong>解析HTML文档，构件DOM树，下载资源，构造CSSOM树，执行js脚本</strong>，这些操作没有严格的先后顺序，以下分别解释</li>
+<li>构建DOM树：<ol>
+<li><strong>Tokenizing</strong>：根据HTML规范将字符流解析为标记</li>
+<li><strong>Lexing</strong>：词法分析将标记转换为对象并定义属性和规则</li>
+<li><strong>DOM construction</strong>：根据HTML标记关系将对象组成DOM树</li>
+</ol>
+</li>
+<li>解析过程中遇到图片、样式表、js文件，启动下载</li>
+<li>构建CSSOM树：<ol>
+<li><strong>Tokenizing</strong>：字符流转换为标记流</li>
+<li><strong>Node</strong>：根据标记创建点</li>
+<li><strong>CSSOM</strong>：节点创建CSSOM树</li>
+</ol>
+</li>
+<li>根据DOM树和CSSOM树构建渲染树:<ol>
+<li>从DOM树的根节点遍历所有<strong>可见节点</strong>，不可见节点包括：1）script,meta这样本身不可见的标签。2)被css隐藏的节点，如<code>display: none</code></li>
+<li>对每一个可见节点，找到恰当的CSSOM规则并应用</li>
+<li>发布可视节点的内容和计算样式</li>
+</ol>
+</li>
+<li><strong>js解析如下：</strong><ol>
+<li>浏览器创建Document对象并解析HTML，将解析到的元素和文本节点添加到文档中，此时<strong>document.readystate为loading</strong></li>
+<li>HTML解析器遇到<strong>没有async和defer的script时</strong>，将他们添加到文档中，然后执行行内或外部脚本。这些脚本会同步执行，并且在脚本下载和执行时解析器会暂停。这样就可以用document.write()把文本插入到输入流中。<strong>同步脚本经常简单定义函数和注册事件处理程序，他们可以遍历和操作script和他们之前的文档内容</strong></li>
+<li>当解析器遇到设置了<strong>async</strong>属性的script时，开始下载脚本并继续解析文档。脚本会在它<strong>下载完成后尽快执行</strong>，但是解析器不会停下来等它下载。异步脚本<strong>禁止使用document.write()</strong>，它们可以访问自己script和之前的文档元素</li>
+<li>当文档完成解析，<strong>document.readState变成interactive</strong></li>
+<li>所有d<strong>efer脚本会按照在文档出现的顺序执</strong>行，延迟脚本能访问完整文档树，禁止使用document.write()</li>
+<li>浏览器在<strong>Document对象上触发DOMContentLoaded事件</strong></li>
+<li>此时文档完全解析完成，浏览器可能还在等待如图片等内容加载，等<strong>这些内容完成载入并且所有异步脚本完成载入和执行，document.readState变为complete，window触发load事件</strong></li>
+</ol>
+</li>
+<li><strong>显示页面（HTML解析过程中会逐步显示页面）</strong><br>详细简版<ol>
+<li>从浏览器接收url到开启网络请求线程（这一部分可以展开浏览器的机制以及进程与线程之间的关系）</li>
+<li>开启网络线程到发出一个完整的HTTP请求（这一部分涉及到dns查询，TCP/IP请求，五层因特网协议栈等知识）</li>
+<li>从服务器接收到请求到对应后台接收到请求（这一部分可能涉及到负载均衡，安全拦截以及后台内部的处理等等）</li>
+<li>后台和前台的HTTP交互（这一部分包括HTTP头部、响应码、报文结构、cookie等知识，可以提下静态资源的cookie优化，以及编码解码，如gzip压缩等）</li>
+<li>单独拎出来的缓存问题，HTTP的缓存（这部分包括http缓存头部，ETag，catch-control等）</li>
+<li>浏览器接收到HTTP数据包后的解析流程（解析html-词法分析然后解析成dom树、解析css生成css规则树、合并成render树，然后layout、painting渲染、复合图层的合成、GPU绘制、外链资源的处理、loaded和DOMContentLoaded等）</li>
+<li>CSS的可视化格式模型（元素的渲染规则，如包含块，控制框，BFC，IFC等概念）</li>
+<li>JS引擎解析过程（JS的解释阶段，预处理阶段，执行阶段生成执行上下文，VO，作用域链、回收机制等等）</li>
+<li>其它（可以拓展不同的知识模块，如跨域，web安全，hybrid模式等等内容）</li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Web/" rel="tag"># Web</a>
+          
+            <a href="/tags/http/" rel="tag"># http</a>
+          
+            <a href="/tags/计算机网络/" rel="tag"># 计算机网络</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/29/编写更好的JavaScript条件式和匹配条件的技巧/" rel="next" title="编写更好的JavaScript条件式和匹配条件的技巧">
+                <i class="fa fa-chevron-left"></i> 编写更好的JavaScript条件式和匹配条件的技巧
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/02/日常日记/" rel="prev" title="2019-7-2 日常日记 vue-router中的keep-alive">
+                2019-7-2 日常日记 vue-router中的keep-alive <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Glyn Yu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zjycp" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chnzjycp@foxmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简易版"><span class="nav-number">1.</span> <span class="nav-text">简易版</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#详细版"><span class="nav-number">2.</span> <span class="nav-text">详细版</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Glyn Yu</span>
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1277767124&web_id=1277767124" language="JavaScript"></script>
+  </div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cyuiUNe9o';
+      var conf = '7ce07412b2706ea50ada6a787faf513f';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618},"display":{"superSample":2,"width":150,"height":300,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false},"react":{"opacityDefault":0.5,"opacityOnHover":0},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="HTML5,离线存储,转载,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言：使用HTML5，通过创建cache manifest文件，可轻松创建web应用的离线版本。HTML5引入了应用程序缓存，这意味着web应用可进行缓存，并可在没有网络时进行访问。应用程序缓存为应用带来三个优势：  离线浏览–用户可在离线时使用它们。  速度–已经缓存的资源加载得更快。  减少服务器负载–浏览器将只从服务器下载更改过的资源。   原理和环境如上面提到的HTML5的离线存储是基于一">
+<meta name="keywords" content="HTML5,离线存储,转载">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HTML5离线存储原理">
+<meta property="og:url" content="https://blog.emx6.com/2019/07/12/HTML5离线存储原理/index.html">
+<meta property="og:site_name" content="上帝不会掷骰子">
+<meta property="og:description" content="前言：使用HTML5，通过创建cache manifest文件，可轻松创建web应用的离线版本。HTML5引入了应用程序缓存，这意味着web应用可进行缓存，并可在没有网络时进行访问。应用程序缓存为应用带来三个优势：  离线浏览–用户可在离线时使用它们。  速度–已经缓存的资源加载得更快。  减少服务器负载–浏览器将只从服务器下载更改过的资源。   原理和环境如上面提到的HTML5的离线存储是基于一">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-09-07T14:59:24.541Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="HTML5离线存储原理">
+<meta name="twitter:description" content="前言：使用HTML5，通过创建cache manifest文件，可轻松创建web应用的离线版本。HTML5引入了应用程序缓存，这意味着web应用可进行缓存，并可在没有网络时进行访问。应用程序缓存为应用带来三个优势：  离线浏览–用户可在离线时使用它们。  速度–已经缓存的资源加载得更快。  减少服务器负载–浏览器将只从服务器下载更改过的资源。   原理和环境如上面提到的HTML5的离线存储是基于一">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.emx6.com/2019/07/12/HTML5离线存储原理/">
+
+
+
+
+
+  <title>HTML5离线存储原理 | 上帝不会掷骰子</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">上帝不会掷骰子</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            日程表
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog.emx6.com/2019/07/12/HTML5离线存储原理/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Glyn Yu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="上帝不会掷骰子">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">HTML5离线存储原理</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-12T16:15:25+08:00">
+                2019-07-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Web/" itemprop="url" rel="index">
+                    <span itemprop="name">Web</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2019/07/12/HTML5离线存储原理/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2019/07/12/HTML5离线存储原理/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </span></div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h3><p>使用HTML5，通过创建cache manifest文件，可轻松创建web应用的离线版本。<br>HTML5引入了应用程序缓存，这意味着web应用可进行缓存，并可在没有网络时进行访问。<br>应用程序缓存为应用带来三个优势：</p>
+<ul>
+<li><p>离线浏览–用户可在离线时使用它们。</p>
+</li>
+<li><p>速度–已经缓存的资源加载得更快。</p>
+</li>
+<li><p>减少服务器负载–浏览器将只从服务器下载更改过的资源。</p>
+</li>
+</ul>
+<h3 id="原理和环境"><a href="#原理和环境" class="headerlink" title="原理和环境"></a>原理和环境</h3><p>如上面提到的HTML5的离线存储是基于一个新建的.appcache文件的，通过这个文件上的解析清单离线存储资源，这些资源就会像cookie一样被存储了下来。之后当网络在处于离线状态下时，浏览器会通过被离线存储的数据进行页面展示。</p>
+<p>就像cookie一样，html5的离线存储也需要服务器环境。</p>
+<h3 id="解析清单"><a href="#解析清单" class="headerlink" title="解析清单"></a>解析清单</h3><p>在开始之前要先了解下manifest（即.appcache文件），上面的解析清单要怎么写。</p>
+<blockquote><p>manifest 文件是简单的文本文件，它告知浏览器被缓存的内容（以及不缓存的内容）。<br>manifest 文件可分为三个部分：</p>
+<ul>
+<li><p>CACHE MANIFEST - 在此标题下列出的文件将在首次下载后进行缓存</p>
+</li>
+<li><p>NETWORK - 在此标题下列出的文件需要与服务器的连接，且不会被缓存</p>
+</li>
+<li><p>FALLBACK - 在此标题下列出的文件规定当页面无法访问时的回退页面（比如 404 页面）<br>在线的情况下,用户代理每次访问页面，都会去读一次manifest.如果发现其改变, 则重新加载全部清单中的资源。</p>
+</li>
+</ul>
+</blockquote>
+<h4 id="CACHE-MANIFEST"><a href="#CACHE-MANIFEST" class="headerlink" title="CACHE MANIFEST"></a>CACHE MANIFEST</h4><p>第一行，CACHE MANIFEST，是必需的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 CACHE MANIFEST /theme.css /logo.gif /main.js</span><br></pre></td></tr></table></figure>
+
+<p>上面的 manifest 文件列出了三个资源：一个 CSS 文件，一个 GIF 图像，以及一个 JavaScript 文件。当 manifest 文件加载后，浏览器会从网站的根目录下载这三个文件。然后，无论用户何时与因特网断开连接，这些资源依然是可用的。</p>
+<h4 id="NETWORK"><a href="#NETWORK" class="headerlink" title="NETWORK"></a>NETWORK</h4><blockquote><p>白名单，使用通配符”*”. 则会进入白名单的open状态. 这种状态下.所有不在相关Cache区域出现的url都默认使用HTTP相关缓存头策略.</p>
+</blockquote>
+<p>下面的 NETWORK 小节规定文件 “login.asp” 永远不会被缓存，且离线时是不可用的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;font color=red&gt;NETWORK&lt;/font&gt;: login.asp</span><br></pre></td></tr></table></figure>
+<p>可以使用*来指示所有其他资源/文件都需要因特网连接：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NETWORK: *</span><br></pre></td></tr></table></figure>
+<h4 id="FALLBACK"><a href="#FALLBACK" class="headerlink" title="FALLBACK"></a>FALLBACK</h4><p>下面的 FALLBACK 小节规定如果无法建立因特网连接，则用 “offline.html” 替代 /html5/ 目录中的所有文件：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALLBACK：/html5/ /404.html</span><br></pre></td></tr></table></figure>
+
+<blockquote><p>注释：第一个 URI 是资源，第二个是替补。</p>
+</blockquote>
+<h3 id="更新缓存"><a href="#更新缓存" class="headerlink" title="更新缓存"></a>更新缓存</h3><p>一旦应用被缓存，它就会保持缓存直到发生下列情况：</p>
+<ul>
+<li><p>用户清空浏览器缓存</p>
+</li>
+<li><p>manifest 文件被修改</p>
+</li>
+<li><p>由程序来更新应用缓存</p>
+</li>
+</ul>
+<h3 id="Demo"><a href="#Demo" class="headerlink" title="Demo"></a>Demo</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">|-- index.html </span><br><span class="line">|-- demo.appcache </span><br><span class="line">|-- image </span><br><span class="line">    |-- 01.jpg </span><br><span class="line">    |-- 02.jpg</span><br></pre></td></tr></table></figure>
+
+<p>index.html</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE html&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">"en"</span> <span class="attr">manifest</span>=<span class="string">"demo.appcache"</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">"UTF-8"</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">title</span>&gt;</span>HTML5离线存储<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"image/01.jpg"</span> <span class="attr">alt</span>=<span class="string">""</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"image/02.jpg"</span> <span class="attr">alt</span>=<span class="string">""</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>demo.appcache</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">CACHE MANIFEST #v01 image/01.jpg</span><br><span class="line">NETWORK: *</span><br><span class="line">FALLBACK: <span class="regexp">/</span></span><br></pre></td></tr></table></figure>
+
+<p>image文件夹下存储着</p>
+<p>01.jpg</p>
+<p>01.jpg</p>
+<p>02.jpg</p>
+<p>02.jpg</p>
+<p>当服务器开启时</p>
+<p>当服务器关闭时（是关闭，暂停看不出效果）</p>
+<p>可以看见图片1成功被离线展示出来了，图片2像正常情况一样显示不出来。</p>
+<p>现在我想把图片2和图片1的位置换一下呢.</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"image/02.jpg"</span> <span class="attr">alt</span>=<span class="string">""</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"image/01.jpg"</span> <span class="attr">alt</span>=<span class="string">""</span>&gt;</span> </span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>这时候发现问题来了，html明明修改了为什么图片没有置换过来呢，我不是在<figure class="highlight plain"><figcaption><span>MANIFEST文件其它都采用在线模式。查资料得知：引入manifest的页面,即使没有被列入缓存清单中，仍然会被用户代理缓存。</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">好吧，那我把.appcache文件更新下，于是乎把头部的版本号修改一下#v02。刷新下页面还是没反应！再刷新，有了！为什么？</span><br><span class="line"></span><br><span class="line">对于浏览器来说,manifest的加载是要晚于其他资源的. 这就导致check manifest的过程是滞后的.发现manifest改变.所有浏览器的实现都是紧随这做静默更新资源.以保证下次pv,应用到更新.</span><br><span class="line"></span><br><span class="line">通过控制台我们能够窥探一二：</span><br><span class="line"></span><br><span class="line">第一次刷新，应用程序缓存更新准备事件</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">第二次刷新才会看到效果。</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">### 缓存立即执行</span><br><span class="line">我们的产品已经更新了用户却要第二次进来才能够看到，这样用户体验也太差了吧，有什么方式能够解决呢？好在html5给javascript提供了相关的API。</span><br><span class="line"></span><br><span class="line">API篇幅太多自行查看把，这里我晒下我测试成功的code：</span><br><span class="line">```JavaScript</span><br><span class="line">/*code1,简单粗暴的*/</span><br><span class="line">applicationCache.onupdateready = function()&#123;</span><br><span class="line">    applicationCache.swapCache();</span><br><span class="line">    location.reload();</span><br><span class="line">&#125;;</span><br><span class="line">/*code2，缓存公用方法*/</span><br><span class="line">var EventUtil = &#123;</span><br><span class="line">    addHandler: function(element, type, handler) &#123;</span><br><span class="line">        if (element.addEventListener) &#123;</span><br><span class="line">            element.addEventListener(type, handler, false);</span><br><span class="line">        &#125; else if (element.attachEvent) &#123;</span><br><span class="line">            element.attachEvent(“on” + type, handler);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">            element[&quot;on&quot; + type] = handler;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">EventUtil.addHandler(applicationCache, “updateready”, function() &#123; </span><br><span class="line">    //缓存更新并已下载，要在下次进入页面生效</span><br><span class="line">    //检查缓存manifest文件是否更新，ps:页面加载默认检查一次。</span><br><span class="line">    applicationCache.update(); </span><br><span class="line">    //交换到新的缓存项中，交换了要下次进入页面才生效</span><br><span class="line">    applicationCache.swapCache(); </span><br><span class="line">    </span><br><span class="line">    location.reload(); //重新载入页面</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>code1一般用在页面加载时直接触发，而code2的方式可后期检查更新。</p>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ul>
+<li><p>站点离线存储的容量限制是5M</p>
+</li>
+<li><p>如果manifest文件，或者内部列举的某一个文件不能正常下载，整个更新过程将视为失败，浏览器继续全部使用老的缓存</p>
+</li>
+<li><p>引用manifest的html必须与manifest文件同源，在同一个域下</p>
+</li>
+<li><p>在manifest中使用的相对路径，相对参照物为manifest文件</p>
+</li>
+<li><p>CACHE MANIFEST字符串应在第一行，且必不可少</p>
+</li>
+<li><p>系统会自动缓存引用清单文件的 HTML 文件</p>
+</li>
+<li><p>manifest文件中CACHE则与NETWORK，FALLBACK的位置顺序没有关系，如果是隐式声明需要在最前面</p>
+</li>
+<li><p>FALLBACK中的资源必须和manifest文件同源</p>
+</li>
+<li><p>当一个资源被缓存后，该浏览器直接请求这个绝对路径也会访问缓存中的资源。</p>
+</li>
+<li><p>站点中的其他页面即使没有设置manifest属性，请求的资源如果在缓存中也从缓存中访问</p>
+</li>
+<li><p>当manifest文件发生改变时，资源请求本身也会触发更新</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/HTML5/" rel="tag"># HTML5</a>
+          
+            <a href="/tags/离线存储/" rel="tag"># 离线存储</a>
+          
+            <a href="/tags/转载/" rel="tag"># 转载</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/07/11/React-Vue项目为什么要在列表组件中写key/" rel="next" title="React/Vue项目为什么要在列表组件中写key">
+                <i class="fa fa-chevron-left"></i> React/Vue项目为什么要在列表组件中写key
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/07/23/JavaScript设计模式-一-何为设计与5大设计原则/" rel="prev" title="JavaScript设计模式(一)何为设计与5大设计原则">
+                JavaScript设计模式(一)何为设计与5大设计原则 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Glyn Yu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">20</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">38</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zjycp" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chnzjycp@foxmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#前言："><span class="nav-number">1.</span> <span class="nav-text">前言：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原理和环境"><span class="nav-number">2.</span> <span class="nav-text">原理和环境</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解析清单"><span class="nav-number">3.</span> <span class="nav-text">解析清单</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#CACHE-MANIFEST"><span class="nav-number">3.1.</span> <span class="nav-text">CACHE MANIFEST</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NETWORK"><span class="nav-number">3.2.</span> <span class="nav-text">NETWORK</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FALLBACK"><span class="nav-number">3.3.</span> <span class="nav-text">FALLBACK</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新缓存"><span class="nav-number">4.</span> <span class="nav-text">更新缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Demo"><span class="nav-number">5.</span> <span class="nav-text">Demo</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#注意事项"><span class="nav-number">6.</span> <span class="nav-text">注意事项</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Glyn Yu</span>
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1277767124&web_id=1277767124" language="JavaScript"></script>
+  </div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cyuiUNe9o';
+      var conf = '7ce07412b2706ea50ada6a787faf513f';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618},"display":{"superSample":2,"width":150,"height":300,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false},"react":{"opacityDefault":0.5,"opacityOnHover":0},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
