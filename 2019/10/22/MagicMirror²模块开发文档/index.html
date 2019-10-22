@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="魔镜,文档,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="MagicMirror² 模块开发文档本文档介绍了开发MagicMirror²模块的方法目录：  模块结构 文件   核心模块文件：modulename.js   可用的模块实例属性 可继承的模块方法 模块实例方法   Node Helper:node_helper.js 可用的模块实例属性 可继承的模块方法 模块实例方法   MagicMirror 辅助方法 模块选择   MagicMirror">
+<meta name="keywords" content="魔镜,文档">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MagicMirror²模块开发文档">
+<meta property="og:url" content="https://blog.emx6.com/2019/10/22/MagicMirror²模块开发文档/index.html">
+<meta property="og:site_name" content="上帝不会掷骰子">
+<meta property="og:description" content="MagicMirror² 模块开发文档本文档介绍了开发MagicMirror²模块的方法目录：  模块结构 文件   核心模块文件：modulename.js   可用的模块实例属性 可继承的模块方法 模块实例方法   Node Helper:node_helper.js 可用的模块实例属性 可继承的模块方法 模块实例方法   MagicMirror 辅助方法 模块选择   MagicMirror">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-10-22T15:19:57.543Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MagicMirror²模块开发文档">
+<meta name="twitter:description" content="MagicMirror² 模块开发文档本文档介绍了开发MagicMirror²模块的方法目录：  模块结构 文件   核心模块文件：modulename.js   可用的模块实例属性 可继承的模块方法 模块实例方法   Node Helper:node_helper.js 可用的模块实例属性 可继承的模块方法 模块实例方法   MagicMirror 辅助方法 模块选择   MagicMirror">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.emx6.com/2019/10/22/MagicMirror²模块开发文档/">
+
+
+
+
+
+  <title>MagicMirror²模块开发文档 | 上帝不会掷骰子</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">上帝不会掷骰子</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            日程表
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog.emx6.com/2019/10/22/MagicMirror²模块开发文档/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Glyn Yu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="上帝不会掷骰子">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">MagicMirror²模块开发文档</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-10-22T23:19:17+08:00">
+                2019-10-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/翻译/" itemprop="url" rel="index">
+                    <span itemprop="name">翻译</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2019/10/22/MagicMirror²模块开发文档/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2019/10/22/MagicMirror²模块开发文档/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </span></div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="MagicMirror²-模块开发文档"><a href="#MagicMirror²-模块开发文档" class="headerlink" title="MagicMirror² 模块开发文档"></a>MagicMirror² 模块开发文档</h1><p>本文档介绍了开发MagicMirror²模块的方法<br>目录：</p>
+<ul>
+<li>模块结构<ul>
+<li>文件</li>
+</ul>
+</li>
+<li>核心模块文件：modulename.js  <ul>
+<li>可用的模块实例属性</li>
+<li>可继承的模块方法</li>
+<li>模块实例方法</li>
+</ul>
+</li>
+<li>Node Helper:node_helper.js<ul>
+<li>可用的模块实例属性</li>
+<li>可继承的模块方法</li>
+<li>模块实例方法</li>
+</ul>
+</li>
+<li>MagicMirror 辅助方法<ul>
+<li>模块选择</li>
+</ul>
+</li>
+<li>MagicMirror 日志</li>
+</ul>
+<hr>
+<h2 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h2><p>随着魔镜项目取得了巨大的关注，可用的第三方模块也越来越多。对于新用户和开发者来说，为了去了解一个模块究竟做了什么、长什么样以及它的依赖，要花费很多时间在众多的项目仓库中浏览。不幸的是，这些信息仍难以获得，除非你先安装好它。因此<strong>我们强烈建议你在README文件中包含以下信息。</strong></p>
+<ul>
+<li>一张你开发的模块的高质量截图</li>
+<li>用简短的一句话描述它做了什么</li>
+<li>它调用了哪些API，包括web链接</li>
+<li>API和请求是否需要密钥以及是否有用户限制</li>
+</ul>
+<p>当然，这也能帮助你更好地认识和改善你的工作。</p>
+<h2 id="模块结构"><a href="#模块结构" class="headerlink" title="模块结构"></a>模块结构</h2><p>所有的模块都在<code>modules</code>文件夹中加载。默认模块都放在<code>modules/default</code>文件夹下。你的模块也应该放在modules下。记住在moduls文件下的文件会被git忽略，这样的话在升级MagicMirror² 的时候就不会丢失它们。</p>
+<p>一个模块可以单独放在一个文件夹下，多个模块也可以分组放在一个子文件夹下。记住模块的名字需要是唯一的，即使将名称相似的模块放在不同的文件夹中，也不能同时加载它们。</p>
+<h3 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h3><ul>
+<li><strong>modulename/modulename.js</strong> -这是模块的核心文件</li>
+<li><strong>modulename/node_helper.js</strong> -这是一个可选的辅助文件，它将被node脚本加载。node helper会和模块的脚本通过socket系统进行通信。</li>
+<li><strong>modulename/public</strong> 任何在这个目录下的文件都可以通过浏览器访问<code>/modulename/filename.ext.</code></li>
+<li><strong>modulename/anyfileorfolder</strong>这里放置会被核心脚本用到的一些文件。例如<code>modulename/css/modulename.css</code>就是用来放置样式表的一个很好路径</li>
+</ul>
+<h2 id="模块核心文件：modulename-js"><a href="#模块核心文件：modulename-js" class="headerlink" title="模块核心文件：modulename.js"></a>模块核心文件：modulename.js</h2><p>模块将在这个脚本中被定义。要使用模块的话，这个脚本不可或缺。最简单的形式，核心文件必须包括：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Module.register(<span class="string">"modulename"</span>,&#123;&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>当然，上面这个模块不会做任何事情，所以还是看一下最简单的一个模块：<strong>helloworld</strong>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//helloworld.js:</span></span><br><span class="line"></span><br><span class="line">Module.register(<span class="string">"helloworld"</span>,&#123;</span><br><span class="line">	<span class="comment">// Default module config.</span></span><br><span class="line">	defaults: &#123;</span><br><span class="line">		text: <span class="string">"Hello World!"</span></span><br><span class="line">	&#125;,</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Override dom generator.</span></span><br><span class="line">	getDom: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">var</span> wrapper = <span class="built_in">document</span>.createElement(<span class="string">"div"</span>);</span><br><span class="line">		wrapper.innerHTML = <span class="keyword">this</span>.config.text;</span><br><span class="line">		<span class="keyword">return</span> wrapper;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>你能够看到，<code>Module.register()</code>方法接受两个参数：模块的名称和一个描述模块属性的对象。</p>
+<p>###　可用的模块实例属性</p>
+<p>在模块被初始化之后，模块实例有一些可用的属性:<br>|实例属性|类型|描述|<br>|:——|:–|:–|<br>|<code>this.name</code>|String|模块名称|<br>|<code>this.identifier</code>|String|模块实例的唯一标识|<br>| <code>this.hidden</code> | Boolean | 这个代表模块现在是否被隐藏 |<br>| <code>this.config</code> | Boolean |？？？  |<br>| <code>this.data</code> | Object |data对象包括一个额外的元数据（见下）|</p>
+<p><code>this.data</code>包括一下数据：</p>
+<ul>
+<li><code>data.classes</code> - modules的dom wrapper的class</li>
+<li><code>data.file</code> - 模块核心文件的名称</li>
+<li><code>data.path</code> - 模块所在的目录路径</li>
+<li><code>data.header</code> - 加到模块？？？？</li>
+<li><code>data.postion</code> - 模块实例将显示的位置</li>
+</ul>
+<h4 id="default："><a href="#default：" class="headerlink" title="default：{}"></a><code>default：{}</code></h4><p>任何在default对象中定义的对象，都会被合并到用户的<code>config.js</code>中的模块配置中。这里是你设置模块默认配置的最佳位置。所有的模块配置属性都可以通过<code>this.config.propertyName</code>获取，这会在之后提到。</p>
+<h4 id="requireVersion："><a href="#requireVersion：" class="headerlink" title="requireVersion："></a>requireVersion：</h4><p>版本：2.1.0<br>定义MagicMirror框架的最低版本。如果它被设置了，系统会把这个版本号和用户的版本进行比较，如果用户版本较低，就不会运行这个模块。确保在Node helper中也设置了这个值。</p>
+<p><strong>注意</strong>：因为这个检查设置是在2.1.0版本中介绍的，这个操作不会在更老的版本中执行。<br>Example：</p>
+<p><code>JavaScript
+requiresVersion: &quot;2.1.0&quot;,</code></p>
+<h3 id="可继承的模块方法"><a href="#可继承的模块方法" class="headerlink" title="可继承的模块方法"></a>可继承的模块方法</h3><h4 id="init"><a href="#init" class="headerlink" title="init()"></a>init()</h4><p>这个放在在模块取得实例时被调用。在多数情况下，你不需要去继承这个方法。</p>
+<h4 id="loaded-callback"><a href="#loaded-callback" class="headerlink" title="loaded(callback)"></a>loaded(callback)</h4><p>版本：2.1.1<br>此方法在模块被加载后调用。在配置中之后的模块现在还没有被加载。<code>callback</code>中的函数必须在模块被加载完后被调用。在多数情况下你不需要继承此方法。<br><strong>Example:</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">loaded: <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.finishLoading();</span><br><span class="line">	Log.log(<span class="keyword">this</span>.name + <span class="string">' is loaded!'</span>);</span><br><span class="line">	callback();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="start"><a href="#start" class="headerlink" title="start()"></a>start()</h4><p>这个方法在所有模块都被加载好并且系统准备系统时加载。注意这个时候dom对象还没有被创建。start方法可用来定义模块其他属性。<br><strong>Example:</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">start: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.mySpecialProperty = <span class="string">"So much wow!"</span>;</span><br><span class="line">	Log.log(<span class="keyword">this</span>.name + <span class="string">' is started!'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="getScript"><a href="#getScript" class="headerlink" title="getScript()"></a>getScript()</h4><p><strong>返回：Array</strong><br>getScript方法用来加载任何额外的脚本。这个方法需要返回一个字符串数组。如果你想放回一个module目录下的文件路径，使用<code>this.file(&#39;file.name.js&#39;)</code>方法。在任何情况下，加载器只会加载一次文件。它也会检查文件在vendor文件夹下是否存在。<br><strong>Example</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">getScripts: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> [</span><br><span class="line">		<span class="string">'script.js'</span>, <span class="comment">// will try to load it from the vendor folder, otherwise it will load is from the module folder.</span></span><br><span class="line">		<span class="string">'moment.js'</span>, <span class="comment">// this file is available in the vendor folder, so it doesn't need to be available in the module folder.</span></span><br><span class="line">		<span class="keyword">this</span>.file(<span class="string">'anotherfile.js'</span>), <span class="comment">// this file will be loaded straight from the module folder.</span></span><br><span class="line">		<span class="string">'https://code.jquery.com/jquery-2.2.3.min.js'</span>,  <span class="comment">// this file will be loaded from the jquery servers.</span></span><br><span class="line">	]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>:如果某个文件不能被加载，魔镜的启动会被阻塞。所以，建议不要使用外部的url。</p>
+<h4 id="getStyles"><a href="#getStyles" class="headerlink" title="getStyles()"></a>getStyles()</h4><p><strong>返回：Array</strong></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/魔镜/" rel="tag"># 魔镜</a>
+          
+            <a href="/tags/文档/" rel="tag"># 文档</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/10/11/魔镜开发日记-三-pusher-Python-Client/" rel="next" title="魔镜开发日记(三)--pusher-Python-Client">
+                <i class="fa fa-chevron-left"></i> 魔镜开发日记(三)--pusher-Python-Client
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Glyn Yu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">24</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">45</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zjycp" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chnzjycp@foxmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MagicMirror²-模块开发文档"><span class="nav-number">1.</span> <span class="nav-text">MagicMirror² 模块开发文档</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#建议"><span class="nav-number">1.1.</span> <span class="nav-text">建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块结构"><span class="nav-number">1.2.</span> <span class="nav-text">模块结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件"><span class="nav-number">1.2.1.</span> <span class="nav-text">文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块核心文件：modulename-js"><span class="nav-number">1.3.</span> <span class="nav-text">模块核心文件：modulename.js</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#default："><span class="nav-number">1.3.0.1.</span> <span class="nav-text">default：{}</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#requireVersion："><span class="nav-number">1.3.0.2.</span> <span class="nav-text">requireVersion：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可继承的模块方法"><span class="nav-number">1.3.1.</span> <span class="nav-text">可继承的模块方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#init"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">init()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#loaded-callback"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">loaded(callback)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#start"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">start()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getScript"><span class="nav-number">1.3.1.4.</span> <span class="nav-text">getScript()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getStyles"><span class="nav-number">1.3.1.5.</span> <span class="nav-text">getStyles()</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Glyn Yu</span>
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1277767124&web_id=1277767124" language="JavaScript"></script>
+  </div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cyuiUNe9o';
+      var conf = '7ce07412b2706ea50ada6a787faf513f';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618},"display":{"superSample":2,"width":150,"height":300,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false},"react":{"opacityDefault":0.5,"opacityOnHover":0},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
