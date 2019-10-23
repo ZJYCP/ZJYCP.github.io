@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="上帝不会掷骰子">
 <meta property="og:description" content="MagicMirror² 模块开发文档本文档介绍了开发MagicMirror²模块的方法目录：  模块结构 文件   核心模块文件：modulename.js   可用的模块实例属性 可继承的模块方法 模块实例方法   Node Helper:node_helper.js 可用的模块实例属性 可继承的模块方法 模块实例方法   MagicMirror 辅助方法 模块选择   MagicMirror">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-10-23T12:36:40.890Z">
+<meta property="og:updated_time" content="2019-10-23T15:51:55.226Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MagicMirror²模块开发文档">
 <meta name="twitter:description" content="MagicMirror² 模块开发文档本文档介绍了开发MagicMirror²模块的方法目录：  模块结构 文件   核心模块文件：modulename.js   可用的模块实例属性 可继承的模块方法 模块实例方法   Node Helper:node_helper.js 可用的模块实例属性 可继承的模块方法 模块实例方法   MagicMirror 辅助方法 模块选择   MagicMirror">
@@ -385,7 +385,7 @@
 <li>模块选择</li>
 </ul>
 </li>
-<li>MagicMirror 日志</li>
+<li>MagicMirror 日志记录</li>
 </ul>
 <hr>
 <h2 id="建议"><a href="#建议" class="headerlink" title="建议"></a>建议</h2><p>随着魔镜项目取得了巨大的关注，可用的第三方模块也越来越多。对于新用户和开发者来说，为了去了解一个模块究竟做了什么、长什么样以及它的依赖，要花费很多时间在众多的项目仓库中浏览。不幸的是，这些信息仍难以获得，除非你先安装好它。因此<strong>我们强烈建议你在README文件中包含以下信息。</strong></p>
@@ -396,8 +396,8 @@
 <li>API和请求是否需要密钥以及是否有用户限制</li>
 </ul>
 <p>当然，这也能帮助你更好地认识和改善你的工作。</p>
-<h2 id="模块结构"><a href="#模块结构" class="headerlink" title="模块结构"></a>模块结构</h2><p>所有的模块都在<code>modules</code>文件夹中加载。默认模块都放在<code>modules/default</code>文件夹下。你的模块也应该放在modules下。记住在moduls文件下的文件会被git忽略，这样的话在升级MagicMirror² 的时候就不会丢失它们。</p>
-<p>一个模块可以单独放在一个文件夹下，多个模块也可以分组放在一个子文件夹下。记住模块的名字需要是唯一的，即使将名称相似的模块放在不同的文件夹中，也不能同时加载它们。</p>
+<h2 id="模块结构"><a href="#模块结构" class="headerlink" title="模块结构"></a>模块结构</h2><p>所有的模块都在<code>modules</code>文件夹中加载。默认模块都放在<code>modules/default</code>文件夹下。你的模块也应该放在modules下。注意在moduls文件下的文件会被git忽略，这样的话在升级MagicMirror² 的时候就不会丢失它们。</p>
+<p>一个模块可以单独放在一个文件夹下，多个模块也可以分组放在一个子文件夹下。注意模块的名字需要是唯一的，即使将名称相似的模块放在不同的文件夹中，也不能同时加载它们。</p>
 <h3 id="文件"><a href="#文件" class="headerlink" title="文件"></a>文件</h3><ul>
 <li><strong>modulename/modulename.js</strong> -这是模块的核心文件</li>
 <li><strong>modulename/node_helper.js</strong> -这是一个可选的辅助文件，它将被node脚本加载。node helper会和模块的脚本通过socket系统进行通信。</li>
@@ -412,8 +412,42 @@
 
 <p>你能够看到，<code>Module.register()</code>方法接受两个参数：模块的名称和一个描述模块属性的对象。</p>
 <p>###　可用的模块实例属性</p>
-<p>在模块被初始化之后，模块实例有一些可用的属性:<br>|实例属性|类型|描述|<br>|:——|:–|:–|<br>|<code>this.name</code>|String|模块名称|<br>|<code>this.identifier</code>|String|模块实例的唯一标识|<br>| <code>this.hidden</code> | Boolean | 这个代表模块现在是否被隐藏 |<br>| <code>this.config</code> | Boolean |？？？  |<br>| <code>this.data</code> | Object |data对象包括一个额外的元数据（见下）|</p>
-<p><code>this.data</code>包括一下数据：</p>
+<p>在模块被初始化之后，模块实例有一些可用的属性:</p>
+<table>
+<thead>
+<tr>
+<th align="left">实例属性</th>
+<th align="left">类型</th>
+<th align="left">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>this.name</code></td>
+<td align="left">String</td>
+<td align="left">模块名称</td>
+</tr>
+<tr>
+<td align="left"><code>this.identifier</code></td>
+<td align="left">String</td>
+<td align="left">模块实例的唯一标识</td>
+</tr>
+<tr>
+<td align="left"><code>this.hidden</code></td>
+<td align="left">Boolean</td>
+<td align="left">这个代表模块现在是否被隐藏</td>
+</tr>
+<tr>
+<td align="left"><code>this.config</code></td>
+<td align="left">Boolean ???</td>
+<td align="left">用户在<code>config.js</code>中设置的配置。如果这个属性没有被用户配置覆盖的话，这个配置也包括模块的默认配置</td>
+</tr>
+<tr>
+<td align="left"><code>this.data</code></td>
+<td align="left">Object</td>
+<td align="left">data对象包括一个额外的元数据（见下）</td>
+</tr>
+</tbody></table>
+<p><code>this.data</code>包括以下元数据：</p>
 <ul>
 <li><code>data.classes</code> - modules的dom wrapper的class</li>
 <li><code>data.file</code> - 模块核心文件的名称</li>
@@ -424,8 +458,8 @@
 <h4 id="default："><a href="#default：" class="headerlink" title="default：{}"></a><code>default：{}</code></h4><p>任何在default对象中定义的对象，都会被合并到用户的<code>config.js</code>中的模块配置中。这里是你设置模块默认配置的最佳位置。所有的模块配置属性都可以通过<code>this.config.propertyName</code>获取，这会在之后提到。</p>
 <h4 id="requireVersion："><a href="#requireVersion：" class="headerlink" title="requireVersion："></a>requireVersion：</h4><p>版本：2.1.0<br>定义MagicMirror框架的最低版本。如果它被设置了，系统会把这个版本号和用户的版本进行比较，如果用户版本较低，就不会运行这个模块。确保在Node helper中也设置了这个值。</p>
 <p><strong>注意</strong>：因为这个检查设置是在2.1.0版本中介绍的，这个操作不会在更老的版本中执行。<br>Example：</p>
-<p><code>JavaScript
-requiresVersion: &quot;2.1.0&quot;,</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requiresVersion: <span class="string">"2.1.0"</span>,</span><br></pre></td></tr></table></figure>
+
 <h3 id="可继承的模块方法"><a href="#可继承的模块方法" class="headerlink" title="可继承的模块方法"></a>可继承的模块方法</h3><h4 id="init"><a href="#init" class="headerlink" title="init()"></a>init()</h4><p>这个放在在模块取得实例时被调用。在多数情况下，你不需要去继承这个方法。</p>
 <h4 id="loaded-callback"><a href="#loaded-callback" class="headerlink" title="loaded(callback)"></a>loaded(callback)</h4><p>版本：2.1.1<br>此方法在模块被加载后调用。在配置中之后的模块现在还没有被加载。<code>callback</code>中的函数必须在模块被加载完后被调用。在多数情况下你不需要继承此方法。<br><strong>Example:</strong></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">loaded: <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.finishLoading();</span><br><span class="line">	Log.log(<span class="keyword">this</span>.name + <span class="string">' is loaded!'</span>);</span><br><span class="line">	callback();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -598,7 +632,88 @@ requiresVersion: &quot;2.1.0&quot;,</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="string">"RUNNING"</span>: <span class="string">"Slutar"</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>在这种情况下，translate方法不会在翻译中找到任何变量，而是寻找<code>fallback</code>变量，并在可能的情况下使用它来创建翻译。</p>
-<h3 id="The-Node-Helper-node-helper-js"><a href="#The-Node-Helper-node-helper-js" class="headerlink" title="The Node Helper: node_helper.js"></a>The Node Helper: node_helper.js</h3>
+<h2 id="The-Node-Helper-node-helper-js"><a href="#The-Node-Helper-node-helper-js" class="headerlink" title="The Node Helper: node_helper.js"></a>The Node Helper: node_helper.js</h2><p>node helper是一个node.js脚本，它可以通过一些后端任务来支持你的模块。对于每一个模块类型，只有一个node helper会被创建。例如：如果你的魔镜有两个日历模块，那么只有一个node helper实例。</p>
+<p>node_helper.js的最简单的形式必须包括：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> NodeHelper = <span class="built_in">require</span>(<span class="string">"node_helper"</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = NodeHelper.create(&#123;&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>当然，上面的node helper不会做任何有用的事情。有了上面的信息，你应该可以让它更加复杂了。</p>
+<h3 id="可用的模块实例属性"><a href="#可用的模块实例属性" class="headerlink" title="可用的模块实例属性"></a>可用的模块实例属性</h3><h4 id="this-name"><a href="#this-name" class="headerlink" title="this.name"></a><code>this.name</code></h4><p><strong>String</strong><br>模块的名称</p>
+<h4 id="this-path"><a href="#this-path" class="headerlink" title="this.path"></a>this.path</h4><p><strong>String</strong><br>模块的路径</p>
+<h4 id="this-expressApp"><a href="#this-expressApp" class="headerlink" title="this.expressApp"></a>this.expressApp</h4><p>Express App Instance<br>这是一个express实例的链接，允许你定义额外的路由。<br><strong>Example</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">start: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.expressApp.get(<span class="string">'/foobar'</span>, <span class="function"><span class="keyword">function</span> (<span class="params">req, res</span>) </span>&#123;</span><br><span class="line">		res.send(<span class="string">'GET request to /foobar'</span>);</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：</strong>默认情况下，你的模块的public文件夹的路径会被定义：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.expressApp.use(<span class="string">"/"</span> + <span class="keyword">this</span>.name, express.static(<span class="keyword">this</span>.path + <span class="string">"/public"</span>));</span><br></pre></td></tr></table></figure>
+
+<h4 id="this-io"><a href="#this-io" class="headerlink" title="this.io"></a><code>this.io</code></h4><p><strong>Socket IO Instance</strong><br>这是一个IO实例的链接，它允许你进行一些Socket.IO操作。在多数情况下，你用不到它，因为Node Helper有一些更加方便的方法。</p>
+<h4 id="requireVersion"><a href="#requireVersion" class="headerlink" title="requireVersion"></a><code>requireVersion</code></h4><p>版本：2.1.0</p>
+<p>一个描述MagicMirror框架最低版本的字符串。如果它被设置了，系统会把这个版本号和用户的版本进行比较，如果用户版本较低，就不会运行这个模块。</p>
+<p><strong>注意</strong>：因为这个检查设置是在2.1.0版本中介绍的，这个操作不会在更老的版本中执行。<br>Example：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">requiresVersion: <span class="string">"2.1.0"</span>,</span><br></pre></td></tr></table></figure>
+
+<p>###　可继承的模块方法</p>
+<h4 id="init-1"><a href="#init-1" class="headerlink" title="init()"></a><code>init()</code></h4><p>当node helper被实例化后这个方法被调用，在多数情况下你不需要继承这个方法。</p>
+<h4 id="start-1"><a href="#start-1" class="headerlink" title="start()"></a><code>start()</code></h4><p>这个方法在node helper被加载好并且系统准备系统时调用。start方法可以用来定义额外的模块属性。</p>
+<p><strong>Example</strong>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">start: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.mySpecialProperty = <span class="string">"So much wow!"</span>;</span><br><span class="line">	Log.log(<span class="keyword">this</span>.name + <span class="string">' is started!'</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="stop"><a href="#stop" class="headerlink" title="stop()"></a><code>stop()</code></h4><p>这个方法在MagicMirror服务接收到信号指令并且开始关闭时执行。这个方法需要包括所有需要的指令去关闭已开启的连接、停止所有的子进程并且使各模块静默退出。</p>
+<p><strong>Example</strong>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">stop: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">"Shutting down MyModule"</span>);</span><br><span class="line">	<span class="keyword">this</span>.connection.close();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="socketNotificationReceived-function-notification-payload"><a href="#socketNotificationReceived-function-notification-payload" class="headerlink" title="socketNotificationReceived: function(notification, payload)"></a><code>socketNotificationReceived: function(notification, payload)</code></h4><p>利用这个方法，你的node helper能够接收来自的你模块的通知。这个模块被调用时，它有两个参数：</p>
+<ul>
+<li><code>notification</code> - String - 通知的标识</li>
+<li><code>payload</code> - AnyType - 通知的负载</li>
+</ul>
+<p><strong>注意:</strong> socket连接会在模块使用sendSocketNotification发送第一个信息时就创建</p>
+<p><strong>Example</strong>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">socketNotificationReceived: <span class="function"><span class="keyword">function</span>(<span class="params">notification, payload</span>) </span>&#123;</span><br><span class="line">	Log.log(<span class="keyword">this</span>.name + <span class="string">" received a socket notification: "</span> + notification + <span class="string">" - Payload: "</span> + payload);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>###　模块实例方法</p>
+<p>每个node helper都有一些能帮助你更好构建模块的便利方法。</p>
+<p>####　<code>this.sendSocketNotification(notification,payload)</code></p>
+<p><strong>notification String</strong> - 通知的标识<br><strong>payload AnyType</strong> - 可选　通知的负载</p>
+<p>如果你想给你所有的模块发送通知，使用<code>sendSocketNotification(notification, payload)</code>,只有你模块类型的模块会接受到socket通知。</p>
+<p><strong>注意:</strong> 因为所有的模块实例都会收到通知，确保正确的模块响应你的信息是你的任务。</p>
+<p><strong>Example</strong>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.sendSocketNotification(<span class="string">'SET_CONFIG'</span>, <span class="keyword">this</span>.config);</span><br></pre></td></tr></table></figure>
+
+<h2 id="MagicMirror辅助方法"><a href="#MagicMirror辅助方法" class="headerlink" title="MagicMirror辅助方法"></a>MagicMirror辅助方法</h2><p>MagicMirror核心对象：<code>MM</code>有一些便携方法能帮助你更好的把控你的模块。大多数的<code>MM</code>方法都可以在你的模块实例上获取。</p>
+<p>###　模块选择</p>
+<p>你的模块唯一的附加方法就是获取其他模块的引用。这可以用来隐藏或显示其他模块。</p>
+<h4 id="MM-getModules"><a href="#MM-getModules" class="headerlink" title="MM.getModules()"></a><code>MM.getModules()</code></h4><p><strong>返回 Array</strong> - 模块实例的数组</p>
+<p>使用<code>MM.getModules()</code>方法选择所有被加载的模块实例。它会返回一个现在已经被加载的模块实例的数组。返回的数组有一些筛选方法，见下。</p>
+<h5 id="withClass-classnames"><a href="#withClass-classnames" class="headerlink" title=".withClass(classnames)"></a><code>.withClass(classnames)</code></h5><p><strong>classnames String or Array</strong> - 你想要筛选的类名称。<br><strong>返回 Array</strong> - 一个模块实例数组</p>
+<p>如果你想基于一个或多个类名称进行筛选，在<code>MM。getModules()</code>方法后使用withClass方法。它的参数可以是一个数组，或者用空格分割的字符串。</p>
+<p><strong>Example</strong>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> modules = MM.getModules().withClass(<span class="string">'classname'</span>);</span><br><span class="line"><span class="keyword">var</span> modules = MM.getModules().withClass(<span class="string">'classname1 classname2'</span>);</span><br><span class="line"><span class="keyword">var</span> modules = MM.getModules().withClass([<span class="string">'classname1'</span>,<span class="string">'classname2'</span>]);</span><br></pre></td></tr></table></figure>
+
+<h5 id="exceptWithClass-classname"><a href="#exceptWithClass-classname" class="headerlink" title=".exceptWithClass(classname)"></a><code>.exceptWithClass(classname)</code></h5><p><strong>classnames String or Array</strong> - 你想从结果中移去的模块类名称<br><strong>返回 Array</strong> - 模块实例数组</p>
+<p>如果你想基于类名称从选择集合中删去一些模块，在<code>MM。getModules()</code>方法后使用exceptWithClass方法。它的参数可以是一个数组，或者用空格分割的字符串。</p>
+<p><strong>Example</strong>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> modules = MM.getModules().exceptWithClass(<span class="string">'classname'</span>);</span><br><span class="line"><span class="keyword">var</span> modules = MM.getModules().exceptWithClass(<span class="string">'classname1 classname2'</span>);</span><br><span class="line"><span class="keyword">var</span> modules = MM.getModules().exceptWithClass([<span class="string">'classname1'</span>,<span class="string">'classname2'</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>#####　<code>.exceptModule(module)</code><br><strong>module Module Object</strong> - 你想从结果中移去的模块的引用。<br><strong>返回 Array</strong> - 模块实例数组</p>
+<p>此处原文有误。</p>
+<p>如果你想筛选出除了自身的所有模块，这个方法会很有用。</p>
+<p><strong>Example</strong>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> modules = MM.getModules().exceptModule(<span class="keyword">this</span>);</span><br></pre></td></tr></table></figure>
+
+<p>当然，你可以把以上选择器结合起来：<br><strong>Example</strong>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> modules = MM.getModules().withClass(<span class="string">'classname1'</span>).exceptwithClass(<span class="string">'classname2'</span>).exceptModule(aModule);</span><br></pre></td></tr></table></figure>
+
+<p>#####　<code>.enumerate(callback)</code></p>
+<p><strong>callback Function(module)</strong> - 每一个实例上的回调</p>
+<p>如果你想在所有选择好的模块删执行一个操作，你可以使用<code>enumerate</code>函数:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MM.getModules().enumerate(<span class="function"><span class="keyword">function</span>(<span class="params">module</span>) </span>&#123;</span><br><span class="line">    Log.log(<span class="built_in">module</span>.name);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example</strong>: 要隐藏除了自身的其他模块，你可以这么写：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Module.register(<span class="string">"modulename"</span>,&#123;</span><br><span class="line">	<span class="comment">//...</span></span><br><span class="line">	notificationReceived: <span class="function"><span class="keyword">function</span>(<span class="params">notification, payload, sender</span>) </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (notification === <span class="string">'DOM_OBJECTS_CREATED'</span>) &#123;</span><br><span class="line">			MM.getModules().exceptModule(<span class="keyword">this</span>).enumerate(<span class="function"><span class="keyword">function</span>(<span class="params">module</span>) </span>&#123;</span><br><span class="line">				<span class="built_in">module</span>.hide(<span class="number">1000</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">					<span class="comment">//Module hidden.</span></span><br><span class="line">				&#125;);</span><br><span class="line">			&#125;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;,</span><br><span class="line">	<span class="comment">//...</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="MagicMirror日志记录"><a href="#MagicMirror日志记录" class="headerlink" title="MagicMirror日志记录"></a>MagicMirror日志记录</h2><p>MagicMirror项目对log做了方便的封装。目前，这只是对原生的<code>console.log</code>的简单代理，但是之后可能会增加一些额外的特性。现在，log只在模块核心文件中有效(不包括node_helper)</p>
+<p><strong>Example</strong>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Log.info(<span class="string">'error'</span>);</span><br><span class="line">Log.log(<span class="string">'log'</span>);</span><br><span class="line">Log.error(<span class="string">'info'</span>);</span><br></pre></td></tr></table></figure>
       
     </div>
     
@@ -791,7 +906,7 @@ requiresVersion: &quot;2.1.0&quot;,</code></p>
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MagicMirror²-模块开发文档"><span class="nav-number">1.</span> <span class="nav-text">MagicMirror² 模块开发文档</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#建议"><span class="nav-number">1.1.</span> <span class="nav-text">建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块结构"><span class="nav-number">1.2.</span> <span class="nav-text">模块结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件"><span class="nav-number">1.2.1.</span> <span class="nav-text">文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块核心文件：modulename-js"><span class="nav-number">1.3.</span> <span class="nav-text">模块核心文件：modulename.js</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#default："><span class="nav-number">1.3.0.1.</span> <span class="nav-text">default：{}</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#requireVersion："><span class="nav-number">1.3.0.2.</span> <span class="nav-text">requireVersion：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可继承的模块方法"><span class="nav-number">1.3.1.</span> <span class="nav-text">可继承的模块方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#init"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">init()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#loaded-callback"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">loaded(callback)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#start"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">start()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getScript"><span class="nav-number">1.3.1.4.</span> <span class="nav-text">getScript()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getStyles"><span class="nav-number">1.3.1.5.</span> <span class="nav-text">getStyles()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getTranslations"><span class="nav-number">1.3.1.6.</span> <span class="nav-text">getTranslations()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getDom"><span class="nav-number">1.3.1.7.</span> <span class="nav-text">getDom()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getHeader"><span class="nav-number">1.3.1.8.</span> <span class="nav-text">getHeader()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#notificationReceived-notification-payload-sender"><span class="nav-number">1.3.1.9.</span> <span class="nav-text">notificationReceived(notification, payload, sender)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#socketNotificationRceived-function-notification-payload"><span class="nav-number">1.3.1.10.</span> <span class="nav-text">socketNotificationRceived: function(notification, payload)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#resume"><span class="nav-number">1.3.1.11.</span> <span class="nav-text">resume()</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模块实例方法"><span class="nav-number">1.3.2.</span> <span class="nav-text">模块实例方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#this-file-filename"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">this.file(filename)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-update-speed"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">this.update(speed)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-sendNotification-notification-payload"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">this.sendNotification(notification, payload)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-sendSocketNotification-notification-payload"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">this.sendSocketNotification(notification, payload)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-hide-speed-callback-options"><span class="nav-number">1.3.2.5.</span> <span class="nav-text">this.hide(speed, callback, options)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-shwo-speed-callback-options"><span class="nav-number">1.3.2.6.</span> <span class="nav-text">this.shwo(speed,callback,options)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Visibility-locking"><span class="nav-number">1.3.2.7.</span> <span class="nav-text">Visibility locking</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-translate-identifier"><span class="nav-number">1.3.2.8.</span> <span class="nav-text">this.translate(identifier)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-translate-identifier-variables"><span class="nav-number">1.3.2.9.</span> <span class="nav-text">this.translate(identifier,variables)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Node-Helper-node-helper-js"><span class="nav-number">1.3.3.</span> <span class="nav-text">The Node Helper: node_helper.js</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MagicMirror²-模块开发文档"><span class="nav-number">1.</span> <span class="nav-text">MagicMirror² 模块开发文档</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#建议"><span class="nav-number">1.1.</span> <span class="nav-text">建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块结构"><span class="nav-number">1.2.</span> <span class="nav-text">模块结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件"><span class="nav-number">1.2.1.</span> <span class="nav-text">文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块核心文件：modulename-js"><span class="nav-number">1.3.</span> <span class="nav-text">模块核心文件：modulename.js</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#default："><span class="nav-number">1.3.0.1.</span> <span class="nav-text">default：{}</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#requireVersion："><span class="nav-number">1.3.0.2.</span> <span class="nav-text">requireVersion：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可继承的模块方法"><span class="nav-number">1.3.1.</span> <span class="nav-text">可继承的模块方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#init"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">init()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#loaded-callback"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">loaded(callback)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#start"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">start()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getScript"><span class="nav-number">1.3.1.4.</span> <span class="nav-text">getScript()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getStyles"><span class="nav-number">1.3.1.5.</span> <span class="nav-text">getStyles()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getTranslations"><span class="nav-number">1.3.1.6.</span> <span class="nav-text">getTranslations()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getDom"><span class="nav-number">1.3.1.7.</span> <span class="nav-text">getDom()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getHeader"><span class="nav-number">1.3.1.8.</span> <span class="nav-text">getHeader()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#notificationReceived-notification-payload-sender"><span class="nav-number">1.3.1.9.</span> <span class="nav-text">notificationReceived(notification, payload, sender)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#socketNotificationRceived-function-notification-payload"><span class="nav-number">1.3.1.10.</span> <span class="nav-text">socketNotificationRceived: function(notification, payload)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#resume"><span class="nav-number">1.3.1.11.</span> <span class="nav-text">resume()</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模块实例方法"><span class="nav-number">1.3.2.</span> <span class="nav-text">模块实例方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#this-file-filename"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">this.file(filename)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-update-speed"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">this.update(speed)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-sendNotification-notification-payload"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">this.sendNotification(notification, payload)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-sendSocketNotification-notification-payload"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">this.sendSocketNotification(notification, payload)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-hide-speed-callback-options"><span class="nav-number">1.3.2.5.</span> <span class="nav-text">this.hide(speed, callback, options)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-shwo-speed-callback-options"><span class="nav-number">1.3.2.6.</span> <span class="nav-text">this.shwo(speed,callback,options)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Visibility-locking"><span class="nav-number">1.3.2.7.</span> <span class="nav-text">Visibility locking</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-translate-identifier"><span class="nav-number">1.3.2.8.</span> <span class="nav-text">this.translate(identifier)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-translate-identifier-variables"><span class="nav-number">1.3.2.9.</span> <span class="nav-text">this.translate(identifier,variables)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#The-Node-Helper-node-helper-js"><span class="nav-number">1.4.</span> <span class="nav-text">The Node Helper: node_helper.js</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可用的模块实例属性"><span class="nav-number">1.4.1.</span> <span class="nav-text">可用的模块实例属性</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#this-name"><span class="nav-number">1.4.1.1.</span> <span class="nav-text">this.name</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-path"><span class="nav-number">1.4.1.2.</span> <span class="nav-text">this.path</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-expressApp"><span class="nav-number">1.4.1.3.</span> <span class="nav-text">this.expressApp</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-io"><span class="nav-number">1.4.1.4.</span> <span class="nav-text">this.io</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#requireVersion"><span class="nav-number">1.4.1.5.</span> <span class="nav-text">requireVersion</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#init-1"><span class="nav-number">1.4.1.6.</span> <span class="nav-text">init()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#start-1"><span class="nav-number">1.4.1.7.</span> <span class="nav-text">start()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#stop"><span class="nav-number">1.4.1.8.</span> <span class="nav-text">stop()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#socketNotificationReceived-function-notification-payload"><span class="nav-number">1.4.1.9.</span> <span class="nav-text">socketNotificationReceived: function(notification, payload)</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MagicMirror辅助方法"><span class="nav-number">1.5.</span> <span class="nav-text">MagicMirror辅助方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#MM-getModules"><span class="nav-number">1.5.0.1.</span> <span class="nav-text">MM.getModules()</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#withClass-classnames"><span class="nav-number">1.5.0.1.1.</span> <span class="nav-text">.withClass(classnames)</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#exceptWithClass-classname"><span class="nav-number">1.5.0.1.2.</span> <span class="nav-text">.exceptWithClass(classname)</span></a></li></ol></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#MagicMirror日志记录"><span class="nav-number">1.6.</span> <span class="nav-text">MagicMirror日志记录</span></a></li></div>
             
 
           </div>
