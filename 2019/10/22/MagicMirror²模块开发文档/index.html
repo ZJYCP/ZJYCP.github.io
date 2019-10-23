@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="上帝不会掷骰子">
 <meta property="og:description" content="MagicMirror² 模块开发文档本文档介绍了开发MagicMirror²模块的方法目录：  模块结构 文件   核心模块文件：modulename.js   可用的模块实例属性 可继承的模块方法 模块实例方法   Node Helper:node_helper.js 可用的模块实例属性 可继承的模块方法 模块实例方法   MagicMirror 辅助方法 模块选择   MagicMirror">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-10-22T15:19:57.543Z">
+<meta property="og:updated_time" content="2019-10-23T12:36:40.890Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MagicMirror²模块开发文档">
 <meta name="twitter:description" content="MagicMirror² 模块开发文档本文档介绍了开发MagicMirror²模块的方法目录：  模块结构 文件   核心模块文件：modulename.js   可用的模块实例属性 可继承的模块方法 模块实例方法   Node Helper:node_helper.js 可用的模块实例属性 可继承的模块方法 模块实例方法   MagicMirror 辅助方法 模块选择   MagicMirror">
@@ -437,8 +437,168 @@ requiresVersion: &quot;2.1.0&quot;,</code></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">getScripts: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> [</span><br><span class="line">		<span class="string">'script.js'</span>, <span class="comment">// will try to load it from the vendor folder, otherwise it will load is from the module folder.</span></span><br><span class="line">		<span class="string">'moment.js'</span>, <span class="comment">// this file is available in the vendor folder, so it doesn't need to be available in the module folder.</span></span><br><span class="line">		<span class="keyword">this</span>.file(<span class="string">'anotherfile.js'</span>), <span class="comment">// this file will be loaded straight from the module folder.</span></span><br><span class="line">		<span class="string">'https://code.jquery.com/jquery-2.2.3.min.js'</span>,  <span class="comment">// this file will be loaded from the jquery servers.</span></span><br><span class="line">	]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><strong>注意</strong>:如果某个文件不能被加载，魔镜的启动会被阻塞。所以，建议不要使用外部的url。</p>
-<h4 id="getStyles"><a href="#getStyles" class="headerlink" title="getStyles()"></a>getStyles()</h4><p><strong>返回：Array</strong></p>
+<h4 id="getStyles"><a href="#getStyles" class="headerlink" title="getStyles()"></a>getStyles()</h4><p><strong>返回：Array</strong><br>getStyle方法用来加载额外的样式文件。这个方法需要返回一个字符串数组。如果你想放回一个module目录下的文件路径，使用<code>this.file(&#39;file.name.css&#39;)</code>方法。在任何情况下，加载器只会加载一次文件。它也会检查文件在vendor文件夹下是否存在。</p>
+<p><strong>Example</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">getStyles: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> [</span><br><span class="line">		<span class="string">'script.css'</span>, <span class="comment">// will try to load it from the vendor folder, otherwise it will load is from the module folder.</span></span><br><span class="line">		<span class="string">'font-awesome.css'</span>, <span class="comment">// this file is available in the vendor folder, so it doesn't need to be available in the module folder.</span></span><br><span class="line">		<span class="keyword">this</span>.file(<span class="string">'anotherfile.css'</span>), <span class="comment">// this file will be loaded straight from the module folder.</span></span><br><span class="line">		<span class="string">'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'</span>,  <span class="comment">// this file will be loaded from the bootstrapcdn servers.</span></span><br><span class="line">	]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
+<p><strong>注意</strong>:如果某个文件不能被加载，魔镜的启动会被阻塞。所以，建议不要使用外部的url。</p>
+<h4 id="getTranslations"><a href="#getTranslations" class="headerlink" title="getTranslations()"></a>getTranslations()</h4><p><strong>返回：Dictionary</strong><br>getTranslations方法用来请求需要加载的翻译文件。这个方法需要返回用国家代号做键名的的字典。<br>如果模块没有特定的语言文件，这个函数会被忽略或者返回<code>false</code>。
+<strong>Example：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">getTranslations: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> &#123;</span><br><span class="line">			en: <span class="string">"translations/en.json"</span>,</span><br><span class="line">			de: <span class="string">"translations/de.json"</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="getDom"><a href="#getDom" class="headerlink" title="getDom()"></a>getDom()</h4><p><strong>返回：Dom对象</strong><br>当MagicMirror需要在屏幕上更新信息时(在它启动时，或者因为你的模块使用<code>this.updateDom()</code>请求刷新时)，系统会调用getDom方法。这个方法需要返回一个Dom对象。<br><strong>Example：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">getDom: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> wrapper = <span class="built_in">document</span>.createElement(<span class="string">"div"</span>);</span><br><span class="line">	wrapper.innerHTML = <span class="string">'Hello world!'</span>;</span><br><span class="line">	<span class="keyword">return</span> wrapper;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="getHeader"><a href="#getHeader" class="headerlink" title="getHeader()"></a>getHeader()</h4><p><strong>返回：String</strong><br>当MagicMirror需要在屏幕上更新信息时(在它启动时，或者因为你的模块使用<code>this.updateDom()</code>请求刷新时)，系统会调用getHeader方法去获取模块的头部信息。这个方法要求返回一个字符串。如果这个方法没有被继承，这个方法将返回用户配置的头部信息。<br>如果你想使用用户配置的头部信息，参考<code>this.data.header</code><br><strong>注意</strong>：如果你没有配置默认的头部信息，没有头部信息会被显示，并且这个方法不会被调用。<br><strong>Example：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">getHeader: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.data.header + <span class="string">' Foo Bar'</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="notificationReceived-notification-payload-sender"><a href="#notificationReceived-notification-payload-sender" class="headerlink" title="notificationReceived(notification, payload, sender)"></a>notificationReceived(notification, payload, sender)</h4><p>MagicMirror核心有能力给模块发送通知，甚至是一个模块可以给另一个模块发送通知。当这个函数被调用后，它有三个参数：</p>
+<ul>
+<li><code>notification</code> - String - 通知的标识</li>
+<li><code>payload</code>- AnyType - 通知的负载</li>
+<li><code>sender</code> - Module - 通知的发送方，如果这个参数是<code>undefined</code>，那么通知的发送方是核心系统。</li>
+</ul>
+<p><strong>Example:</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> notificationReceived: <span class="function"><span class="keyword">function</span>(<span class="params">notification, payload, sender</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (sender) &#123;</span><br><span class="line">		Log.log(<span class="keyword">this</span>.name + <span class="string">" received a module notification: "</span> + notification + <span class="string">" from sender: "</span> + sender.name);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		Log.log(<span class="keyword">this</span>.name + <span class="string">" received a system notification: "</span> + notification);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意:</strong>系统会在启动时发送三个通知。这个通知可能会派上用场。</p>
+<ul>
+<li><code>ALL_MODULES_STARTED</code> - 所有模块被系统，你现在可以给其他模块发送消息。</li>
+<li><code>DOM_OBJECTS_CREATED</code> - 所有的Dom对象被创建，系统现在可以进行视觉上的改变。</li>
+<li><code>MODULE_DOM_CREATED</code> - 这个模块的Dom已经被全部加载，你现在可以访问你的Dom对象。</li>
+</ul>
+<h4 id="socketNotificationRceived-function-notification-payload"><a href="#socketNotificationRceived-function-notification-payload" class="headerlink" title="socketNotificationRceived: function(notification, payload)"></a>socketNotificationRceived: function(notification, payload)</h4><p>当使用node_helper时，node_helper能够给你的模块发送信息，当这个模块被调用时，它有两个参数：</p>
+<ul>
+<li><code>notification</code> - String - 通知的标识</li>
+<li><code>payload</code> - AnyType - 通知的负载</li>
+</ul>
+<p><strong>注意1</strong>:当node helper发送一个通知时，所有这个模块类型的模块都会收到相同的通知。<br><strong>注意2</strong>：当模块第一次使用sendSocketNotification发送信息时，socket链接就被建立。</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">socketNotificationReceived: <span class="function"><span class="keyword">function</span>(<span class="params">notification, payload</span>) </span>&#123;</span><br><span class="line">	Log.log(<span class="keyword">this</span>.name + <span class="string">" received a socket notification: "</span> + notification + <span class="string">" - Payload: "</span> + payload);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+
+<p>####　suspend()</p>
+<p>当一个模块被隐藏时(使用<code>module.hide()</code>),<code>suspend()</code>方法会被调用。通过继承这个方法，你可以进行一些像中止更新计时器的操作。</p>
+<h4 id="resume"><a href="#resume" class="headerlink" title="resume()"></a>resume()</h4><p>当一个模块被显示时(使用<code>module.show()</code>),<code>resume()</code>方法会被调用。通过继承这个方法，你可以进行一些像重启更新计时器的操作。</p>
+<h3 id="模块实例方法"><a href="#模块实例方法" class="headerlink" title="模块实例方法"></a>模块实例方法</h3><p>每个模块实例都有一些对构建模块有帮助的便捷方法。</p>
+<h4 id="this-file-filename"><a href="#this-file-filename" class="headerlink" title="this.file(filename)"></a><code>this.file(filename)</code></h4><p><strong>filename String</strong> - 你创建路径的文件的名称<br><strong>返回 String</strong><br>如果你想在你的模块文件夹下创建文件的路径，使用<code>file()</code>方法。//TODO（Is method comes in handy when configuring the getScripts and getStyles methods.）</p>
+<h4 id="this-update-speed"><a href="#this-update-speed" class="headerlink" title="this.update(speed)"></a><code>this.update(speed)</code></h4><p><strong>speed Number</strong> - 可选，运动速度 毫秒</p>
+<p>当你要更新模块时，调用<code>updateDom(speed)</code>方法。它向MagicMirror核心请求更新它的dom对象。如果你定义的speed，那么内容更新将是延时运动的，不过要内容真的有变化。<br>举例，时钟模块每一秒会调用这个方法：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">start: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> self = <span class="keyword">this</span>;</span><br><span class="line">	setInterval(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		self.updateDom(); <span class="comment">// no speed defined, so it updates instantly.</span></span><br><span class="line">	&#125;, <span class="number">1000</span>); <span class="comment">//perform every 1000 milliseconds.</span></span><br><span class="line">&#125;</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<h4 id="this-sendNotification-notification-payload"><a href="#this-sendNotification-notification-payload" class="headerlink" title="this.sendNotification(notification, payload)"></a><code>this.sendNotification(notification, payload)</code></h4><p><strong>notification String</strong> - 通知标识<br><strong>payload AnyType</strong> - 可选，通知负载</p>
+<p>如果你想给其他模块发送信息，使用<code>sendNotification(notification, payload)</code>。所有的模块都会通过notificationReceived方法收到信息。//TODO In that case, the sender is automatically set to the instance calling the sendNotification method.</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.sendNotification(<span class="string">'MYMODULE_READY_FOR_ACTION'</span>, &#123;<span class="attr">foo</span>:bar&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="this-sendSocketNotification-notification-payload"><a href="#this-sendSocketNotification-notification-payload" class="headerlink" title="this.sendSocketNotification(notification, payload)"></a><code>this.sendSocketNotification(notification, payload)</code></h4><p><strong>notification String</strong> - 通知标识<br><strong>payload AnyType</strong> - 可选，通知负载</p>
+<p>如果你想给node_helper发送通知，使用<code>endSocketNotification(notification, payload)</code>。只有这个模块的node_helper会收到socket通知。<br><strong>Example:</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.sendSocketNotification(<span class="string">'SET_CONFIG'</span>, <span class="keyword">this</span>.config);</span><br></pre></td></tr></table></figure>
+
+<h4 id="this-hide-speed-callback-options"><a href="#this-hide-speed-callback-options" class="headerlink" title="this.hide(speed, callback, options)"></a><code>this.hide(speed, callback, options)</code></h4><ul>
+<li><strong>speed Number</strong> - 可选(设置callback或option时需要)，隐藏的动效速度，毫秒。</li>
+<li><strong>callback</strong> -可选，在运动结束后的回调</li>
+<li><strong>options</strong> - 可选，隐藏操作的额外选项（见下）。（2.1.0）</li>
+</ul>
+<p>你可以使用<code>hide(speed,callback)</code>方法来隐藏一个模块。你可以在对象实例自身上使用<code>this.hide()</code>，当然你也可以使用<code>anOtherModule.hide()</code>来隐藏其他模块。</p>
+<p>可配置的选择项:</p>
+<ul>
+<li><code>lockString</code> - String 当设置了lock字符，在没有正确的lockstring时模块无法被显示。这样的话可以阻止一个模块被显示。把你的模块标识（this.identifier)作为lockString的方式是好的.（见下）</li>
+</ul>
+<p><strong>注意1</strong>：如果隐藏动效被取消，这可能因为在隐藏动画结束前调用了显示动画。回调函数不会被取消。<br><strong>注意2</strong>:如果隐藏动效被hijacked(其他方法在这个模块上调用了隐藏方法)，回调函数不会被调用。<br><strong>注意3</strong>:如果dom没有被创建，hide方法不会被调用。等待<code>DOM_OBJECTS_CREATED</code>通知。</p>
+<h4 id="this-shwo-speed-callback-options"><a href="#this-shwo-speed-callback-options" class="headerlink" title="this.shwo(speed,callback,options)"></a><code>this.shwo(speed,callback,options)</code></h4><ul>
+<li><strong>speed Number</strong> - 可选(设置callback或option时需要)，显示的动效速度，毫秒。</li>
+<li><strong>callback</strong> -可选，在运动结束后的回调</li>
+<li><strong>options</strong> - 可选，显示操作的额外选项（见下）。（2.1.0）</li>
+</ul>
+<p>你可以使用<code>show(speed,callback)</code>方法来显示一个模块。你可以在对象实例自身上使用<code>this.show()</code>，当然你也可以使用<code>anOtherModule.show()</code>来显示其他模块。</p>
+<p>可选配置：</p>
+<ul>
+<li><code>lockString</code> - String 当设置了lock字符，在没有正确的lockstring时模块无法被显示。这样的话可以阻止一个模块被显示。把你的模块标识（this.identifier)作为lockString的方式是好的.（见下）</li>
+<li><code>force</code> - Boolean 当force标志为<code>true</code>时，locking机制会被覆盖。谨慎使用这个选项。</li>
+</ul>
+<p><strong>注意1</strong>：如果显示动画被取消，这可能因为在显示动画结束前隐藏动画被调用。回调函数不会被调用。<br><strong>注意2</strong>:如果显示动效被hijacked(其他方法在这个模块上调用了显示方法)，回调函数不会被调用。<br><strong>注意3</strong>:如果dom没有被创建，show方法不会被调用。等待<code>DOM_OBJECTS_CREATED</code>通知。</p>
+<h4 id="Visibility-locking"><a href="#Visibility-locking" class="headerlink" title="Visibility locking"></a>Visibility locking</h4><p>版本：2.1.0</p>
+<p>Visibility locking 帮助系统阻止不想发生的隐藏/显示操作。以下面的情况为例进行介绍：<br><strong>模块B使模块A隐藏:</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">moduleA.hide(<span class="number">0</span>, &#123;<span class="attr">lockString</span>: <span class="string">"module_b_identifier"</span>&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>模块A现在是隐藏的，并且有一个这个的锁：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">moduleA.lockStrings == [<span class="string">"module_b_identifier"</span>]</span><br><span class="line">moduleA.hidden == <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>模块C使模块A隐藏：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">moduleA.hide(<span class="number">0</span>, &#123;<span class="attr">lockString</span>: <span class="string">"module_c_identifier"</span>&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>模块A现在是隐藏的，并且有一个这个的锁：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">moduleA.lockStrings == [<span class="string">"module_b_identifier"</span>, <span class="string">"module_c_identifier"</span>]</span><br><span class="line">moduleA.hidden == <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>模块B使模块A显示:</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">moduleA.show(<span class="number">0</span>, &#123;<span class="attr">lockString</span>: <span class="string">"module_b_identifier"</span>&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>lockString 会从模块A的锁中去除，但因为还有一个有效的锁，所以这个模块还是会保持隐藏的状态：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">moduleA.lockStrings == [<span class="string">"module_c_identifier"</span>]</span><br><span class="line">moduleA.hidden == <span class="literal">true</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>模块C使模块A显示：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">moduleA.show(<span class="number">0</span>, &#123;<span class="attr">lockString</span>: <span class="string">"module_c_identifier"</span>&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>lockString会从模块A的锁中去除，这会时得锁为空，所以这个模块会被显示：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">moduleA.lockStrings == []</span><br><span class="line">moduleA.hidden == <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>注意:</strong> locking机制可以被force标志重写覆盖。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">moduleA.show(<span class="number">0</span>, &#123;<span class="attr">force</span>: <span class="literal">true</span>&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这会重置lockString，模块会被展示</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">moduleA.lockStrings == []</span><br><span class="line">moduleA.hidden == <span class="literal">false</span></span><br></pre></td></tr></table></figure>
+
+<p>谨慎使用<code>force</code>，查看<code>show</code>获取更多信息。</p>
+<h4 id="this-translate-identifier"><a href="#this-translate-identifier" class="headerlink" title="this.translate(identifier)"></a>this.translate(identifier)</h4><p><strong>identifier String</strong> - 需要翻译的字符串的标识</p>
+<p>魔镜项目为国际化提供了便利的封装。基于用户的语言配置，你可以为你的模块提供不同语言的服务。</p>
+<p>如果没有找到语言包，会执行如下的回退操作：</p>
+<ul>
+<li><ol>
+<li>模块语言包中的用户首选语言</li>
+</ol>
+</li>
+<li><ol start="2">
+<li>核心语言包中的用户搜选语言</li>
+</ol>
+</li>
+<li><ol start="3">
+<li>模块语言包中第一个被定义的语言</li>
+</ol>
+</li>
+<li><ol start="4">
+<li>核心语言包中第一个被定义的语言</li>
+</ol>
+</li>
+<li><ol start="5">
+<li>语言的标识</li>
+</ol>
+</li>
+</ul>
+<p>当给你的模块添加翻译时，最好查看一下在核心翻译文件中是否存在合适的翻译。</p>
+<p><strong>Example:</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.translate(<span class="string">"INFO"</span>) <span class="comment">//Will return a translated string for the identifier INFO</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Example json file:</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="string">"INFO"</span>: <span class="string">"Really important information!"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>:虽然JSON文件不支持注释，但MagicMirror允许在解析JSON文件之前删除注释。翻译文件中的注释可以帮助其他译者。</p>
+<h4 id="this-translate-identifier-variables"><a href="#this-translate-identifier-variables" class="headerlink" title="this.translate(identifier,variables)"></a><code>this.translate(identifier,variables)</code></h4><p><strong>identifier String</strong> - 需要被翻译的字符串的标识。<br><strong>variables Object</strong> - 在翻译中要用到的变量<br>这种改进的，向后兼容的翻译方法和普通的翻译方法一样并且遵循以上的规则。我们推荐使用这个的格式。它允许翻译者改变翻译句子的单词顺序。<br><strong>Example</strong>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> timeUntilEnd = moment(event.endDate, <span class="string">"x"</span>).fromNow(<span class="literal">true</span>);</span><br><span class="line"><span class="keyword">this</span>.translate(<span class="string">"RUNNING"</span>, &#123; <span class="string">"timeUntilEnd"</span>: timeUntilEnd) &#125;); <span class="comment">// Will return a translated string for the identifier RUNNING, replacing `&#123;timeUntilEnd&#125;` with the contents of the variable `timeUntilEnd` in the order that translator intended.</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Example English .json file:</strong>:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="string">"RUNNING"</span>: <span class="string">"Ends in &#123;timeUntilEnd&#125;"</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Example Finnish .json file:</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="string">"RUNNING"</span>: <span class="string">"Päättyy &#123;timeUntilEnd&#125; päästä"</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>:variable对象有一个特殊的情况：<code>fallback</code>。它用于支持翻译文件中没有变量的旧翻译。如果你正在升级一个旧模块，并且这个模块的翻译不支持语序，那么我们推荐使用fallback<br><strong>Example</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> timeUntilEnd = moment(event.endDate, <span class="string">"x"</span>).fromNow(<span class="literal">true</span>);</span><br><span class="line"><span class="keyword">this</span>.translate(<span class="string">"RUNNING"</span>, &#123;</span><br><span class="line">	<span class="string">"fallback"</span>: <span class="keyword">this</span>.translate(<span class="string">"RUNNING"</span>) + <span class="string">" &#123;timeUntilEnd&#125;"</span></span><br><span class="line">	<span class="string">"timeUntilEnd"</span>: timeUntilEnd</span><br><span class="line">)&#125;); <span class="comment">// Will return a translated string for the identifier RUNNING, replacing `&#123;timeUntilEnd&#125;` with the contents of the variable `timeUntilEnd` in the order that translator intended. (has a fallback)</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>Example Swedish .json file that does not have the variable in it:</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="string">"RUNNING"</span>: <span class="string">"Slutar"</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这种情况下，translate方法不会在翻译中找到任何变量，而是寻找<code>fallback</code>变量，并在可能的情况下使用它来创建翻译。</p>
+<h3 id="The-Node-Helper-node-helper-js"><a href="#The-Node-Helper-node-helper-js" class="headerlink" title="The Node Helper: node_helper.js"></a>The Node Helper: node_helper.js</h3>
       
     </div>
     
@@ -631,7 +791,7 @@ requiresVersion: &quot;2.1.0&quot;,</code></p>
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MagicMirror²-模块开发文档"><span class="nav-number">1.</span> <span class="nav-text">MagicMirror² 模块开发文档</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#建议"><span class="nav-number">1.1.</span> <span class="nav-text">建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块结构"><span class="nav-number">1.2.</span> <span class="nav-text">模块结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件"><span class="nav-number">1.2.1.</span> <span class="nav-text">文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块核心文件：modulename-js"><span class="nav-number">1.3.</span> <span class="nav-text">模块核心文件：modulename.js</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#default："><span class="nav-number">1.3.0.1.</span> <span class="nav-text">default：{}</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#requireVersion："><span class="nav-number">1.3.0.2.</span> <span class="nav-text">requireVersion：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可继承的模块方法"><span class="nav-number">1.3.1.</span> <span class="nav-text">可继承的模块方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#init"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">init()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#loaded-callback"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">loaded(callback)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#start"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">start()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getScript"><span class="nav-number">1.3.1.4.</span> <span class="nav-text">getScript()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getStyles"><span class="nav-number">1.3.1.5.</span> <span class="nav-text">getStyles()</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#MagicMirror²-模块开发文档"><span class="nav-number">1.</span> <span class="nav-text">MagicMirror² 模块开发文档</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#建议"><span class="nav-number">1.1.</span> <span class="nav-text">建议</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块结构"><span class="nav-number">1.2.</span> <span class="nav-text">模块结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#文件"><span class="nav-number">1.2.1.</span> <span class="nav-text">文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#模块核心文件：modulename-js"><span class="nav-number">1.3.</span> <span class="nav-text">模块核心文件：modulename.js</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#default："><span class="nav-number">1.3.0.1.</span> <span class="nav-text">default：{}</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#requireVersion："><span class="nav-number">1.3.0.2.</span> <span class="nav-text">requireVersion：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#可继承的模块方法"><span class="nav-number">1.3.1.</span> <span class="nav-text">可继承的模块方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#init"><span class="nav-number">1.3.1.1.</span> <span class="nav-text">init()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#loaded-callback"><span class="nav-number">1.3.1.2.</span> <span class="nav-text">loaded(callback)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#start"><span class="nav-number">1.3.1.3.</span> <span class="nav-text">start()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getScript"><span class="nav-number">1.3.1.4.</span> <span class="nav-text">getScript()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getStyles"><span class="nav-number">1.3.1.5.</span> <span class="nav-text">getStyles()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getTranslations"><span class="nav-number">1.3.1.6.</span> <span class="nav-text">getTranslations()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getDom"><span class="nav-number">1.3.1.7.</span> <span class="nav-text">getDom()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#getHeader"><span class="nav-number">1.3.1.8.</span> <span class="nav-text">getHeader()</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#notificationReceived-notification-payload-sender"><span class="nav-number">1.3.1.9.</span> <span class="nav-text">notificationReceived(notification, payload, sender)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#socketNotificationRceived-function-notification-payload"><span class="nav-number">1.3.1.10.</span> <span class="nav-text">socketNotificationRceived: function(notification, payload)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#resume"><span class="nav-number">1.3.1.11.</span> <span class="nav-text">resume()</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模块实例方法"><span class="nav-number">1.3.2.</span> <span class="nav-text">模块实例方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#this-file-filename"><span class="nav-number">1.3.2.1.</span> <span class="nav-text">this.file(filename)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-update-speed"><span class="nav-number">1.3.2.2.</span> <span class="nav-text">this.update(speed)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-sendNotification-notification-payload"><span class="nav-number">1.3.2.3.</span> <span class="nav-text">this.sendNotification(notification, payload)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-sendSocketNotification-notification-payload"><span class="nav-number">1.3.2.4.</span> <span class="nav-text">this.sendSocketNotification(notification, payload)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-hide-speed-callback-options"><span class="nav-number">1.3.2.5.</span> <span class="nav-text">this.hide(speed, callback, options)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-shwo-speed-callback-options"><span class="nav-number">1.3.2.6.</span> <span class="nav-text">this.shwo(speed,callback,options)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Visibility-locking"><span class="nav-number">1.3.2.7.</span> <span class="nav-text">Visibility locking</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-translate-identifier"><span class="nav-number">1.3.2.8.</span> <span class="nav-text">this.translate(identifier)</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#this-translate-identifier-variables"><span class="nav-number">1.3.2.9.</span> <span class="nav-text">this.translate(identifier,variables)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#The-Node-Helper-node-helper-js"><span class="nav-number">1.3.3.</span> <span class="nav-text">The Node Helper: node_helper.js</span></a></li></ol></li></ol></div>
             
 
           </div>
