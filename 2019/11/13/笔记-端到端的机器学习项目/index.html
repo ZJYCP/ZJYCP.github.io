@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="机器学习,读书笔记,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="机器学习实战  第二章  端到端的机器学习项目真实数据 流行数据存储库UC Irvine Machine Learning RespositoryKaggle datasetsAmazon’s AWS datasets 元门户网站http://dataportals.orghttp://opendatamonitor.nethttp://quandl.com Web PagesWikipedia’">
+<meta name="keywords" content="机器学习,读书笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="笔记-端到端的机器学习项目">
+<meta property="og:url" content="https://blog.emx6.com/2019/11/13/笔记-端到端的机器学习项目/index.html">
+<meta property="og:site_name" content="上帝不会掷骰子">
+<meta property="og:description" content="机器学习实战  第二章  端到端的机器学习项目真实数据 流行数据存储库UC Irvine Machine Learning RespositoryKaggle datasetsAmazon’s AWS datasets 元门户网站http://dataportals.orghttp://opendatamonitor.nethttp://quandl.com Web PagesWikipedia’">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-11-13T10:45:00.253Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="笔记-端到端的机器学习项目">
+<meta name="twitter:description" content="机器学习实战  第二章  端到端的机器学习项目真实数据 流行数据存储库UC Irvine Machine Learning RespositoryKaggle datasetsAmazon’s AWS datasets 元门户网站http://dataportals.orghttp://opendatamonitor.nethttp://quandl.com Web PagesWikipedia’">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://blog.emx6.com/2019/11/13/笔记-端到端的机器学习项目/">
+
+
+
+
+
+  <title>笔记-端到端的机器学习项目 | 上帝不会掷骰子</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">上帝不会掷骰子</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-schedule">
+          <a href="/schedule/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-calendar"></i> <br>
+            
+            日程表
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://blog.emx6.com/2019/11/13/笔记-端到端的机器学习项目/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Glyn Yu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="上帝不会掷骰子">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">笔记-端到端的机器学习项目</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-13T09:40:30+08:00">
+                2019-11-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/机器学习/" itemprop="url" rel="index">
+                    <span itemprop="name">机器学习</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+              <span class="post-meta-divider">|</span>
+              <span class="post-meta-item-icon">
+                <i class="fa fa-comment-o"></i>
+              </span>
+              
+                <a href="/2019/11/13/笔记-端到端的机器学习项目/#SOHUCS" itemprop="discussionUrl">
+                  <span id="changyan_count_unit" class="post-comments-count hc-comment-count" data-xid="2019/11/13/笔记-端到端的机器学习项目/" itemprop="commentsCount"></span>
+                </a>
+              
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </span></div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="机器学习实战-第二章-端到端的机器学习项目"><a href="#机器学习实战-第二章-端到端的机器学习项目" class="headerlink" title="机器学习实战  第二章  端到端的机器学习项目"></a>机器学习实战  第二章  端到端的机器学习项目</h1><h2 id="真实数据"><a href="#真实数据" class="headerlink" title="真实数据"></a>真实数据</h2><ul>
+<li>流行数据存储库<br>UC Irvine Machine Learning Respository<br>Kaggle datasets<br>Amazon’s AWS datasets</li>
+<li>元门户网站<br><a href="http://dataportals.org" target="_blank" rel="noopener">http://dataportals.org</a><br><a href="http://opendatamonitor.net" target="_blank" rel="noopener">http://opendatamonitor.net</a><br><a href="http://quandl.com" target="_blank" rel="noopener">http://quandl.com</a></li>
+<li>Web Pages<br>Wikipedia’s list of Machine Learning datasets<br>quora.com question (<a href="http://goo.gl/zDR78y" target="_blank" rel="noopener">http://goo.gl/zDR78y</a>)
+<a href="https://www.reddit.com/r/datasets" target="_blank" rel="noopener">https://www.reddit.com/r/datasets</a></li>
+</ul>
+<h2 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h2><ul>
+<li>RMSE（均方根误差）<br>68-95-99.7规则<br>回归任务首选性能指标</li>
+<li>平均绝对误差（MAE）</li>
+</ul>
+<p>RMSE对应欧几里得范数，||-||2<br>MAE对应||-||1，曼哈顿距离</p>
+<p>范数指数越高，越关注大的价值，忽视小的价值</p>
+<h2 id="下载数据"><a href="#下载数据" class="headerlink" title="下载数据"></a>下载数据</h2><ul>
+<li>os.path.join()</li>
+</ul>
+<p><strong>用法</strong>：将多个路径组合后返回<br><strong>语法*</strong>：os.path.join(path1[,path2[,path3[,…[,pathN]]]])<br><strong>返回值</strong>：将多个路径组合后返回<br><strong>注意</strong>：第一个绝对路径之前的参数将会被忽略</p>
+<ul>
+<li><p>os.makedirs()<br>参数：exist_ok</p>
+</li>
+<li><p>six<br>Six is a Python 2 and 3 compatibility library. It provides utility functions for smoothing over the differences between the Python versions with the goal of writing Python code that is compatible on both Python versions. See the documentation for more information on what is provided.</p>
+</li>
+<li><p>urllib.urlretrieve(url[, filename[, reporthook[, data]]])<br>参数说明：<br>url：外部或者本地url ,url中不要含有中文，好像会出错。<br>filename：指定了保存到本地的路径（如果未指定该参数，urllib会生成一个临时文件来保存数据）；<br>reporthook：是一个回调函数，当连接上服务器、以及相应的数据块传输完毕的时候会触发该回调。我们可以利用这个回调函数来显示当前的下载进度。<br>data：指post到服务器的数据。该方法返回一个包含两个元素的元组(filename, headers)，filename表示保存到本地的路径，header表示服务器的响应头。 </p>
+</li>
+<li><p>pd.read_csv()</p>
+</li>
+</ul>
+<h2 id="快速查看数据结构"><a href="#快速查看数据结构" class="headerlink" title="快速查看数据结构"></a>快速查看数据结构</h2><ul>
+<li><p>head()<br>查看前五行数据</p>
+</li>
+<li><p>info()<br>简单描述，总行数，类型，非空值</p>
+</li>
+<li><p>value_count()<br>分类统计</p>
+</li>
+<li><p>describe()<br>属性摘要<br>std 标准差</p>
+</li>
+<li><p>hist()<br>绘制每个属性的直方图</p>
+</li>
+<li><p>plt<br>matplot.pyplot<br>绘图库</p>
+</li>
+</ul>
+<h2 id="创建测试集"><a href="#创建测试集" class="headerlink" title="创建测试集"></a>创建测试集</h2><ul>
+<li><p>数据窥探偏误<br>data snooping bias </p>
+</li>
+<li><p>numpy.random.permutation<br>随机产生一个序列，或是返回一个排列范围</p>
+</li>
+<li><p>随机切片时设置种子<br>np.random.seed(42)</p>
+</li>
+<li><p>设置标识符决定是否进入测试集</p>
+</li>
+<li><p>sklearn的切分数据集函数<br>sklearn.model_selection.train_test_split()</p>
+</li>
+<li><p>hash值做标志</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">test_set_check</span><span class="params">(identifier, test_ratio, hash=hashlib.md5)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> hash(np.int64(identifier)).digest()[<span class="number">-1</span>] &lt; <span class="number">256</span> * test_ratio</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>分层抽样</strong></p>
+</li>
+<li><p>sklearn.model_selection.StratifiedShuffleSplit()<br>参数 n_splits是将训练数据分成train/test对的组数，可根据需要进行设置，默认为10<br>参数test_size和train_size是用来设置train/test对中train和test所占的比例。</p>
+</li>
+</ul>
+<h2 id="将地理数据可视化"><a href="#将地理数据可视化" class="headerlink" title="将地理数据可视化"></a>将地理数据可视化</h2><ul>
+<li>data.copy()<br>数据复制</li>
+</ul>
+<ul>
+<li>plot()<br>scatter 散点图</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">housing.plot(kind=<span class="string">"scatter"</span>, x=<span class="string">"longitude"</span>, y=<span class="string">"latitude"</span>, alpha=<span class="number">0.4</span>,</span><br><span class="line">    s=housing[<span class="string">"population"</span>]/<span class="number">100</span>, label=<span class="string">"population"</span>, figsize=(<span class="number">10</span>,<span class="number">7</span>),</span><br><span class="line">    c=<span class="string">"median_house_value"</span>, cmap=plt.get_cmap(<span class="string">"jet"</span>), colorbar=<span class="literal">True</span>,</span><br><span class="line">    sharex=<span class="literal">False</span>)</span><br><span class="line">plt.legend()</span><br></pre></td></tr></table></figure>
+
+<p>plt.get_cmap()<br><a href="https://matplotlib.org/tutorials/colors/colormaps.html" target="_blank" rel="noopener">https://matplotlib.org/tutorials/colors/colormaps.html</a></p>
+<ul>
+<li><p>np.linspace<br>返回指定范围内的指定数量的数值</p>
+</li>
+<li><p>设置colorbar label</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cbar.ax.set_yticklabels([<span class="string">"$%dk"</span>%(round(v/<span class="number">1000</span>)) <span class="keyword">for</span> v <span class="keyword">in</span> tick_values], fontsize=<span class="number">14</span>)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="寻找相关性"><a href="#寻找相关性" class="headerlink" title="寻找相关性"></a>寻找相关性</h2><ul>
+<li><p>corr()<br>计算标准相关系数（皮尔逊相关系数）</p>
+</li>
+<li><p>sort_values(ascending=False)<br>降序</p>
+</li>
+<li><p>scatter_matrix()<br>绘制每个属性相对其他属性的相关值 </p>
+</li>
+</ul>
+<h2 id="试验不同属性组合"><a href="#试验不同属性组合" class="headerlink" title="试验不同属性组合"></a>试验不同属性组合</h2><h2 id="数据清理"><a href="#数据清理" class="headerlink" title="数据清理"></a>数据清理</h2><ul>
+<li>dropna(subset)</li>
+<li>isnull().any()<br>判断哪些列存在缺失值</li>
+<li>drop()<br>执行时创建数据副本 不影响原数据</li>
+<li>fillna()</li>
+<li>imputer<br>计算数字 SimpleImputer(strategy)<br>结果存储在statistics_变量中<br>X=imputer.transform() X为numpy数组<br>pd.DataFrame(X,columns,index)</li>
+</ul>
+<h2 id="处理文本和分类属性"><a href="#处理文本和分类属性" class="headerlink" title="处理文本和分类属性"></a>处理文本和分类属性</h2><ul>
+<li><p>LabelEncoder<br>fit_transform()应用<br>ordinal_encoder.categories_属性查看映射关系 （书中为classes_)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> OrdinalEncoder</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>OneHotEncoder</strong><br>返回稀疏矩阵<br>toarray()转换</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">from sklearn.preprocessing import OneHotEncoder</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="自定义转换器"><a href="#自定义转换器" class="headerlink" title="自定义转换器"></a>自定义转换器</h2><ul>
+<li>duck typing<br>对象的类型不再由继承等方式决定，而由实际运行时所表现出的具体行为来决定<br>创建一个类，实现fit、transform、fit_transform方法</li>
+<li>FunctionTransformer</li>
+</ul>
+<h2 id="特征缩放"><a href="#特征缩放" class="headerlink" title="特征缩放"></a>特征缩放</h2><ul>
+<li>最小-最大缩放（归一化缩放）<br>是最终范围在0-1<br>sklearn中的MinMaxScaler</li>
+<li>标准化<br>减去平均值，再除以方差</li>
+</ul>
+<h2 id="转换流水线-pipeline"><a href="#转换流水线-pipeline" class="headerlink" title="转换流水线(pipeline)"></a>转换流水线(pipeline)</h2><ul>
+<li>ColumnTransformer</li>
+</ul>
+<h2 id="训练评估训练集"><a href="#训练评估训练集" class="headerlink" title="训练评估训练集"></a>训练评估训练集</h2><ul>
+<li><p>线性回归</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>决策树回归<br>DecisionTreeRegressor</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.tree <span class="keyword">import</span> DecisionTreeRegressor</span><br><span class="line"></span><br><span class="line">tree_reg = DecisionTreeRegressor(random_state=<span class="number">42</span>)</span><br><span class="line">tree_reg.fit(housing_prepared, housing_labels)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="使用交叉验证"><a href="#使用交叉验证" class="headerlink" title="使用交叉验证"></a>使用交叉验证</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_val_score</span><br></pre></td></tr></table></figure>
+
+<h2 id="网格搜索"><a href="#网格搜索" class="headerlink" title="网格搜索"></a>网格搜索</h2><ul>
+<li>GridSearchCV<h2 id="随机搜索"><a href="#随机搜索" class="headerlink" title="随机搜索"></a>随机搜索</h2></li>
+<li>RandomizedSearchCV</li>
+</ul>
+<h2 id="分析最佳模型及其错误"><a href="#分析最佳模型及其错误" class="headerlink" title="分析最佳模型及其错误"></a>分析最佳模型及其错误</h2><ul>
+<li>best_estimator_.feature_importances_</li>
+</ul>
+<h2 id="通过测试集评估系统"><a href="#通过测试集评估系统" class="headerlink" title="通过测试集评估系统"></a>通过测试集评估系统</h2><h2 id="test"><a href="#test" class="headerlink" title="test"></a>test</h2><ul>
+<li>np.argpartition</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/机器学习/" rel="tag"># 机器学习</a>
+          
+            <a href="/tags/读书笔记/" rel="tag"># 读书笔记</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/11/12/js设计模式-工厂模式/" rel="next" title="js设计模式-工厂模式">
+                <i class="fa fa-chevron-left"></i> js设计模式-工厂模式
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      <div id="SOHUCS"></div>
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Glyn Yu</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">26</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zjycp" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:chnzjycp@foxmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#机器学习实战-第二章-端到端的机器学习项目"><span class="nav-number">1.</span> <span class="nav-text">机器学习实战  第二章  端到端的机器学习项目</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#真实数据"><span class="nav-number">1.1.</span> <span class="nav-text">真实数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能指标"><span class="nav-number">1.2.</span> <span class="nav-text">性能指标</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载数据"><span class="nav-number">1.3.</span> <span class="nav-text">下载数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#快速查看数据结构"><span class="nav-number">1.4.</span> <span class="nav-text">快速查看数据结构</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建测试集"><span class="nav-number">1.5.</span> <span class="nav-text">创建测试集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#将地理数据可视化"><span class="nav-number">1.6.</span> <span class="nav-text">将地理数据可视化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#寻找相关性"><span class="nav-number">1.7.</span> <span class="nav-text">寻找相关性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#试验不同属性组合"><span class="nav-number">1.8.</span> <span class="nav-text">试验不同属性组合</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据清理"><span class="nav-number">1.9.</span> <span class="nav-text">数据清理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理文本和分类属性"><span class="nav-number">1.10.</span> <span class="nav-text">处理文本和分类属性</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义转换器"><span class="nav-number">1.11.</span> <span class="nav-text">自定义转换器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#特征缩放"><span class="nav-number">1.12.</span> <span class="nav-text">特征缩放</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#转换流水线-pipeline"><span class="nav-number">1.13.</span> <span class="nav-text">转换流水线(pipeline)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#训练评估训练集"><span class="nav-number">1.14.</span> <span class="nav-text">训练评估训练集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用交叉验证"><span class="nav-number">1.15.</span> <span class="nav-text">使用交叉验证</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网格搜索"><span class="nav-number">1.16.</span> <span class="nav-text">网格搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#随机搜索"><span class="nav-number">1.17.</span> <span class="nav-text">随机搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分析最佳模型及其错误"><span class="nav-number">1.18.</span> <span class="nav-text">分析最佳模型及其错误</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#通过测试集评估系统"><span class="nav-number">1.19.</span> <span class="nav-text">通过测试集评估系统</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#test"><span class="nav-number">1.20.</span> <span class="nav-text">test</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Glyn Yu</span>
+
+  
+</div>
+
+
+
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1277767124&web_id=1277767124" language="JavaScript"></script>
+  </div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+    <script type="text/javascript">
+    (function(){
+      var appid = 'cyuiUNe9o';
+      var conf = '7ce07412b2706ea50ada6a787faf513f';
+      var width = window.innerWidth || document.documentElement.clientWidth;
+      if (width < 960) {
+      window.document.write('<script id="changyan_mobile_js" charset="utf-8" type="text/javascript" src="https://changyan.sohu.com/upload/mobile/wap-js/changyan_mobile.js?client_id=' + appid + '&conf=' + conf + '"><\/script>'); } else { var loadJs=function(d,a){var c=document.getElementsByTagName("head")[0]||document.head||document.documentElement;var b=document.createElement("script");b.setAttribute("type","text/javascript");b.setAttribute("charset","UTF-8");b.setAttribute("src",d);if(typeof a==="function"){if(window.attachEvent){b.onreadystatechange=function(){var e=b.readyState;if(e==="loaded"||e==="complete"){b.onreadystatechange=null;a()}}}else{b.onload=a}}c.appendChild(b)};loadJs("https://changyan.sohu.com/upload/changyan.js",function(){
+        window.changyan.api.config({appid:appid,conf:conf})});
+      }
+    })();
+    </script>
+    <script type="text/javascript" src="https://assets.changyan.sohu.com/upload/plugins/plugins.count.js"></script>
+  
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"scale":1,"hHeadPos":0.5,"vHeadPos":0.618},"display":{"superSample":2,"width":150,"height":300,"position":"right","hOffset":0,"vOffset":-20},"mobile":{"show":false},"react":{"opacityDefault":0.5,"opacityOnHover":0},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
